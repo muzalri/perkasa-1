@@ -116,29 +116,32 @@
           this.loading = true
           this.error = null
           
-          console.log('Mencoba login...')
           const response = await this.$auth.loginWith('local', {
             data: {
               email: this.form.email,
-              password: this.form.password
+              password: this.form.password,
+              remember: this.form.remember
             }
           })
-          console.log('Response login:', response)
-          console.log('Auth status:', this.$auth.loggedIn)
-          
-          if (this.$auth.loggedIn) {
-            console.log('Login berhasil, redirect ke dashboard...')
-            await this.$nextTick()
+
+          if (response?.data?.success) {
             this.$router.push('/dashboard')
-          } else {
-            throw new Error('Gagal login')
           }
+
         } catch (err) {
           console.error('Error login:', err)
           this.error = err?.response?.data?.message || 'Email atau password salah'
         } finally {
           this.loading = false
         }
+      }
+    },
+    watch:{
+      'form.email': function(newVal){
+        console.log(newVal)
+      },
+      'form.password': function(newVal){
+        console.log(newVal)
       }
     }
   }

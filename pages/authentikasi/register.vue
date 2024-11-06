@@ -151,25 +151,28 @@
           this.loading = true
           this.error = null
           
-          // Kirim request ke API register
+          // Kirim request ke endpoint register Laravel
           const response = await this.$axios.post('/api/register', {
             name: this.form.name,
             email: this.form.email,
             password: this.form.password,
+            password_confirmation: this.form.password_confirmation,
             no_hp: this.form.no_hp,
             alamat: this.form.alamat
           })
-          
+
           // Jika berhasil register, langsung login
-          await this.$auth.loginWith('local', {
-            data: {
-              email: this.form.email,
-              password: this.form.password
-            }
-          })
-          
-          // Redirect ke dashboard
-          this.$router.push('/dashboard')
+          if (response.data) {
+            await this.$auth.loginWith('local', {
+              data: {
+                email: this.form.email,
+                password: this.form.password
+              }
+            })
+            
+            // Redirect ke dashboard
+            this.$router.push('/dashboard')
+          }
         } catch (err) {
           this.error = err?.response?.data?.message || 'Terjadi kesalahan saat registrasi'
         } finally {

@@ -51,18 +51,19 @@ export default {
     strategies: {
       local: {
         token: {
-          property: 'token',
+          property: 'data.token',
           global: true,
           required: true,
           type: 'Bearer'
         },
         user: {
-          property: 'user'
+          property: 'data.user',
+          autoFetch: true
         },
         endpoints: {
           login: { url: '/api/login', method: 'post' },
           logout: { url: '/api/logout', method: 'post' },
-          user: { url: '/api/user', method: 'get' }
+          user: { url: '/api/profile', method: 'get' }
         }
       }
     },
@@ -71,6 +72,9 @@ export default {
       logout: '/authentikasi/login',
       home: '/dashboard',
       callback: '/authentikasi/login'
+    },
+    vuex: {
+      namespace: 'auth'
     }
   },
 
