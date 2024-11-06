@@ -1,9 +1,14 @@
 <template>
-  <Tutorial/>
+  <div>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'IndexPage'
+  name: 'IndexPage',
+  middleware: 'guest',
+  beforeCreate() {
+    this.$router.push('/authentikasi/login')
+  }
 }
-</script>
+</script> 
