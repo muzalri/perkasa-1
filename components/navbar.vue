@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg-white py-4 px-6 fixed w-full top-0 z-50">
+  <nav :class="['bg-white py-4 px-6 fixed w-full top-0 z-50 transition-transform duration-300', { 'transform -translate-y-full': isHidden }]">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <!-- Logo -->
       <div class="flex items-center">
@@ -7,7 +7,7 @@
       </div>
 
       <!-- Menu Items -->
-      <div class="hidden md:flex items-center space-x-8">
+      <div class="hidden md:flex items-center justify-center space-x-8 flex-grow">
         <a href="#" class="text-black hover:text-gray-600">Komunitas</a>
         <a href="#" class="text-black hover:text-gray-600">Konsultasi</a>
         <a href="#" class="text-black hover:text-gray-600">Panduan</a>
@@ -36,9 +36,34 @@
 
 <script>
 export default {
-  name: 'Navbar'
-}
+  name: 'Navbar',
+  data() {
+    return {
+      lastScrollY: 0,
+      isHidden: false,
+    };
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll);
+  },
+  methods: {
+    handleScroll() {
+      if (window.scrollY > this.lastScrollY) {
+        this.isHidden = true; // Scroll down
+      } else {
+        this.isHidden = false; // Scroll up
+      }
+      this.lastScrollY = window.scrollY;
+    },
+  },
+};
 </script>
 
 <style>
+.transform {
+  transition: transform 0.3s ease;
+}
 </style>

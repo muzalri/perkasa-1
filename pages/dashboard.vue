@@ -5,11 +5,22 @@
             <img 
                 src="~/assets/images/ikan.png" 
                 alt="Koi Fish" 
-                class="inset-0 w-full h-3/4 object-cover custom-rounded"
+                class="inset-0 w-full h-full object-cover custom-rounded"
             />
-            <div class="absolute inset-0 flex items-end justify-start p-10">
-                <h1 class="text-white text-4xl font-bold bg-black bg-opacity-50 p-4 rounded"
-                style="position: absolute; transform: translateY(-200px); z-index: 1;">"Selamat Datang di Dashboard</h1>
+            <div class="absolute bottom-20 left-10 text-white text-lg">Selamat Datang</div>
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2">
+                <button 
+                    @click="scrollToBlueSection" 
+                    class="bg-teal-600 text-white py-2 px-4 rounded flex items-center justify-center"
+                >
+                    <i class="fas fa-arrow-down"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-blue-500 w-full h-screen mt-20"> <!-- Menambahkan mt-5 untuk memberikan jarak -->
+          <div class="flex items-center justify-center h-full">
+                
             </div>
         </div>
     </div>
@@ -18,7 +29,15 @@
 <script>
 export default {
     name: 'DashboardPage',
-    middleware: ['auth']
+    middleware: ['auth'],
+    methods: {
+        scrollToBlueSection() {
+            const blueSection = document.querySelector('.bg-blue-500');
+            if (blueSection) {
+                blueSection.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest', duration: 4000 });
+            }
+        }
+    }
 }
 </script>
 
