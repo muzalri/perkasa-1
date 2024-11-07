@@ -9,7 +9,9 @@
       <!-- Menu Items -->
       <div class="hidden md:flex items-center justify-center space-x-8 flex-grow">
         <a href="#" class="text-black hover:text-gray-600">Komunitas</a>
-        <a href="#" class="text-black hover:text-gray-600">Konsultasi</a>
+        <nuxt-link to="/konsultasi" class="text-black hover:text-gray-600">
+          Konsultasi
+        </nuxt-link>
         <a href="#" class="text-black hover:text-gray-600">Panduan</a>
         <a href="#" class="text-black hover:text-gray-600">Brands</a>
       </div>
