@@ -11,17 +11,17 @@
             <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2">
                 <button 
                     @click="scrollToBlueSection" 
-                    class="bg-teal-600 text-white py-2 px-4 rounded flex items-center justify-center"
+                    class="text-white py-2 px-4 rounded flex items-center justify-center"
                 >
-                    <i class="fas fa-arrow-down"></i>
+                    <img src="~/assets/images/scroll down.png" alt="Scroll Down" class="w-16 h-16" />
                 </button>
             </div>
         </div>
 
-        <div class="bg-blue-500 w-full h-screen mt-20"> <!-- Menambahkan mt-5 untuk memberikan jarak -->
-          <div class="flex items-center justify-center h-full">
-                
-            </div>
+        <div id="blue-section" class="w-full h-screen mt-20 bg-perkasa-blue flex flex-col items-center justify-center">
+            <div class="w-full border-t-2 border-white my-4"></div>
+            <div class="w-full border-t-2 border-white my-4"></div>
+            <div class="w-full border-t-2 border-white my-4"></div>
         </div>
     </div>
 </template>
@@ -32,9 +32,9 @@ export default {
     middleware: ['auth'],
     methods: {
         scrollToBlueSection() {
-            const blueSection = document.querySelector('.bg-blue-500');
+            const blueSection = document.getElementById('blue-section');
             if (blueSection) {
-                blueSection.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest', duration: 4000 });
+                blueSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
     }
@@ -64,5 +64,6 @@ html {
         transform: scale(1); /* Ukuran akhir normal */
     }
 }
+
 </style>
 
