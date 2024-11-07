@@ -1,7 +1,6 @@
 <template>
     <div class="mt-15 p-5 pt-20 px-20">
         <div class="relative w-full h-screen animated-image">
-
             <img 
                 src="~/assets/images/ikan.png" 
                 alt="Koi Fish" 
@@ -18,10 +17,18 @@
             </div>
         </div>
 
-        <div id="blue-section" class="w-full h-screen mt-20 bg-perkasa-blue flex flex-col items-center justify-center">
-            <div class="w-full border-t-2 border-white my-4"></div>
-            <div class="w-full border-t-2 border-white my-4"></div>
-            <div class="w-full border-t-2 border-white my-4"></div>
+        <div id="blue-section" class="w-full h-screen mt-20 bg-perkasa-blue flex flex-col">
+            <div class="flex-grow flex items-center justify-center">
+                <img src="~/assets/images/logo.png" alt="Gambar 1" class="w-20 h-20" />
+            </div>
+            <div class="border-t-2 border-white my-4"></div>
+            <div class="flex-grow flex items-center justify-center">
+                <img src="~/assets/images/logo.png" alt="Gambar 2" class="w-20 h-20" />
+            </div>
+            <div class="border-t-2 border-white my-4"></div>
+            <div class="flex-grow flex items-center justify-center">
+                <img src="~/assets/images/logo.png" alt="Gambar 3" class="w-20 h-20" />
+            </div>
         </div>
     </div>
 </template>
@@ -64,6 +71,5 @@ html {
         transform: scale(1); /* Ukuran akhir normal */
     }
 }
-
 </style>
 
