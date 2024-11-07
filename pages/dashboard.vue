@@ -4,10 +4,10 @@
             <img 
                 src="~/assets/images/ikan.png" 
                 alt="Koi Fish" 
-                class="inset-0 w-full h-full object-cover custom-rounded"
+                class="inset-0 w-full h-4/5 object-cover custom-rounded"
             />
-            <div class="absolute bottom-20 left-10 text-white text-lg">Selamat Datang</div>
-            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2">
+            <div class="absolute bottom-48 left-40 text-white text-lg">Selamat Datang</div>
+            <div class="absolute bottom-48 left-1/2 transform -translate-x-1/2">
                 <button 
                     @click="scrollToBlueSection" 
                     class="text-white py-2 px-4 rounded flex items-center justify-center"
@@ -18,8 +18,10 @@
         </div>
 
         <div id="blue-section" class="w-full h-screen mt-20 bg-perkasa-blue flex flex-col">
-            <div class="flex-grow flex items-center justify-center">
+            <nuxt-link to="/komunitas">
+                <div class ="flex-grow flex items-center justify-center"></div>
                 <img src="~/assets/images/logo.png" alt="Gambar 1" class="w-20 h-20" />
+            </nuxt-link>
             </div>
             <div class="border-t-2 border-white my-4"></div>
             <div class="flex-grow flex items-center justify-center">

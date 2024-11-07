@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6">
+  <div class="mt-15 p-5 pt-20 px-20">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold">Konsultasi</h1>
       <NuxtLink 

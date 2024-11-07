@@ -3,7 +3,10 @@
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <!-- Logo -->
       <div class="flex items-center">
-        <h1 class="text-2xl font-bold">PERKASA</h1>
+        <!-- <h1 class="text-2xl font-bold">PERKASA</h1> -->
+        <nuxt-link to ="/dashboard"class="text-2xl font-bold"
+        >PERKASA
+        </nuxt-link>
       </div>
 
       <!-- Menu Items -->
@@ -12,7 +15,9 @@
         <nuxt-link to="/konsultasi" class="text-black hover:text-gray-600">
           Konsultasi
         </nuxt-link>
-        <a href="#" class="text-black hover:text-gray-600">Panduan</a>
+        <nuxt-link to="/panduan" class="text-black hover:text-gray-600">
+          Panduan
+        </nuxt-link>
         <a href="#" class="text-black hover:text-gray-600">Brands</a>
       </div>
 
@@ -38,34 +43,34 @@
 
 <script>
 export default {
-  name: 'Navbar',
-  data() {
-    return {
-      lastScrollY: 0,
-      isHidden: false,
-    };
+name: 'Navbar',
+data() {
+  return {
+    lastScrollY: 0,
+    isHidden: false,
+  };
+},
+mounted() {
+  window.addEventListener('scroll', this.handleScroll);
+},
+beforeDestroy() {
+  window.removeEventListener('scroll', this.handleScroll);
+},
+methods: {
+  handleScroll() {
+    if (window.scrollY > this.lastScrollY) {
+      this.isHidden = true; // Scroll down
+    } else {
+      this.isHidden = false; // Scroll up
+    }
+    this.lastScrollY = window.scrollY;
   },
-  mounted() {
-    window.addEventListener('scroll', this.handleScroll);
-  },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.handleScroll);
-  },
-  methods: {
-    handleScroll() {
-      if (window.scrollY > this.lastScrollY) {
-        this.isHidden = true; // Scroll down
-      } else {
-        this.isHidden = false; // Scroll up
-      }
-      this.lastScrollY = window.scrollY;
-    },
-  },
+},
 };
 </script>
 
 <style>
 .transform {
-  transition: transform 0.3s ease;
+transition: transform 0.3s ease;
 }
 </style>
