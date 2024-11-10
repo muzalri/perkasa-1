@@ -12,6 +12,7 @@ module.exports = {
         'perkasa': {
           blue: '#34BCC2',
         },
+        'dark-green': '#0f241d',
       },
     },
   },

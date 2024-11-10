@@ -1,53 +1,77 @@
 <template>
-    <div class="mt-15 p-5 pt-20 px-20">
-        <div class="relative w-full h-screen animated-image">
-            <img 
-                src="~/assets/images/ikan.png" 
-                alt="Koi Fish" 
-                class="inset-0 w-full h-4/5 object-cover custom-rounded"
-            />
-            <div class="absolute bottom-48 left-40 text-white text-lg">Selamat Datang</div>
-            <div class="absolute bottom-48 left-1/2 transform -translate-x-1/2">
-                <button 
-                    @click="scrollToBlueSection" 
-                    class="text-white py-2 px-4 rounded flex items-center justify-center"
-                >
-                    <img src="~/assets/images/scroll down.png" alt="Scroll Down" class="w-16 h-16" />
-                </button>
-            </div>
+    <div class="mt-15 p-5 pt-20 px-20 h-screen bg-dark-green text-white flex flex-col">
+      <div class="flex-grow flex items-center justify-between px-20">
+        <div class="flex-1">
+          <h1 class="text-5xl font-extrabold leading-tight">
+            Find the right and best home for your family
+          </h1>
+          <p class="text-lg mt-4 mb-8 text-gray-300">
+            Discover the perfect place to call home with Homeifye. Explore our wide selection of properties designed for you and your family.
+          </p>
+          <button class="bg-white text-dark-green px-6 py-3 rounded-full shadow-md flex items-center space-x-2 hover:shadow-lg">
+            <span>Start exploring</span>
+            <span>&rarr;</span>
+          </button>
         </div>
-
-        <div id="blue-section" class="w-full h-screen mt-20 bg-perkasa-blue flex flex-col">
-            <nuxt-link to="/komunitas">
-                <div class ="flex-grow flex items-center justify-center"></div>
-                <img src="~/assets/images/logo.png" alt="Gambar 1" class="w-20 h-20" />
-            </nuxt-link>
-            </div>
-            <div class="border-t-2 border-white my-4"></div>
-            <div class="flex-grow flex items-center justify-center">
-                <img src="~/assets/images/logo.png" alt="Gambar 2" class="w-20 h-20" />
-            </div>
-            <div class="border-t-2 border-white my-4"></div>
-            <div class="flex-grow flex items-center justify-center">
-                <img src="~/assets/images/logo.png" alt="Gambar 3" class="w-20 h-20" />
-            </div>
-        </div>
+      </div>
+      <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2">
+        <img
+          src="~/assets/images/scrolldown.png"
+          alt="Scroll Down"
+          class="w-12 h-12 cursor-pointer hover:opacity-80"
+          @click="scrollToSection"
+        />
+      </div>
     </div>
+  
+    <section id="new-listings" class="mt-20 px-10">
+      <h2 class="text-4xl font-bold text-dark-green mb-8">New Listings</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Card 1 -->
+        <div class="rounded-lg shadow-lg overflow-hidden">
+          <img src="~/assets/images/scrolldown.png" alt="Pine Estates" class="w-full h-64 object-cover" />
+          <div class="p-4">
+            <h3 class="text-xl font-semibold text-dark-green">Pine Estates</h3>
+            <p class="text-sm text-gray-500">222 Spruce Street, Springfield</p>
+            <p class="text-lg font-bold text-orange-500">$180,000</p>
+            <p class="text-sm text-gray-500">1000 Sq.Ft</p>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="rounded-lg shadow-lg overflow-hidden">
+          <img src="~/assets/images/scrolldown.png" alt="Maple Grove" class="w-full h-64 object-cover" />
+          <div class="p-4">
+            <h3 class="text-xl font-semibold text-dark-green">Maple Grove</h3>
+            <p class="text-sm text-gray-500">333 Cherry Lane, Springfield</p>
+            <p class="text-lg font-bold text-orange-500">$400,000</p>
+            <p class="text-sm text-gray-500">2200 Sq.Ft</p>
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="rounded-lg shadow-lg overflow-hidden">
+          <img src="~/assets/images/scrolldown.png" alt="Willow Heights" class="w-full h-64 object-cover" />
+          <div class="p-4">
+            <h3 class="text-xl font-semibold text-dark-green">Willow Heights</h3>
+            <p class="text-sm text-gray-500">444 Ash Boulevard, Springfield</p>
+            <p class="text-lg font-bold text-orange-500">$290,000</p>
+            <p class="text-sm text-gray-500">1600 Sq.Ft</p>
+          </div>
+        </div>
+      </div>
+    </section>
 </template>
-
 <script>
 export default {
     name: 'DashboardPage',
     middleware: ['auth'],
     methods: {
-        scrollToBlueSection() {
-            const blueSection = document.getElementById('blue-section');
-            if (blueSection) {
-                blueSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+        scrollToSection() {
+            const section = document.querySelector("#new-listings"); // Ganti #target-section dengan ID elemen tujuan
+            section.scrollIntoView({ behavior: "smooth" });
         }
     }
 }
+
 </script>
 
 <style>
