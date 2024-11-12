@@ -14,7 +14,6 @@
       </nuxt-link>
     </div>
 
-
     <!-- Periksa apakah ada artikel -->
     <div v-if="komunitas.length" class="space-y-6">
       <div 
@@ -59,11 +58,10 @@
 </template>
 
 <script>
-export default {
+ export default {
   data() {
     return {
       komunitas: [], // Menampung data komunitas dari API
-      imagePort: 8000, // Port backend server
     };
   },
   async created() {
@@ -82,11 +80,11 @@ export default {
       this.$router.push(`/komunitas/${id}`);
     },
     getImageUrl(imagePath) {
-      return `http://localhost:${this.imagePort}/storage/${imagePath}`;
+      return `${this.$axios.defaults.baseURL}/storage/${imagePath}`;
     },
     getUserImage(profilePath) {
       return profilePath
-        ? `http://localhost:${this.imagePort}/storage/${profilePath}`
+        ? `${this.$axios.defaults.baseURL}/storage/${profilePath}`
         : '/default-avatar.png';
     },
     formatDate(date) {
@@ -102,3 +100,4 @@ export default {
   max-width: 800px;
 }
 </style>
+
