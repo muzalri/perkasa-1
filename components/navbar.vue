@@ -11,15 +11,33 @@
 
       <!-- Menu Items -->
       <div class="hidden md:flex items-center justify-center space-x-8 flex-grow">
-        <NuxtLink to="/komunitas" class="text-white hover:text-gray-600">Komunitas</NuxtLink>
-        <nuxt-link to="/konsultasi" class="text-white hover:text-gray-600">
+        <NuxtLink
+          to="/dashboard"
+          class="relative text-white hover::content-[''] after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full"
+        >
+          Dashboard
+        </NuxtLink>
+        <NuxtLink
+          to="/komunitas"
+          class="relative text-white hover::content-[''] after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full"
+        >
+          Komunitas
+        </NuxtLink>
+        <nuxt-link
+          to="/konsultasi"
+          class="relative text-white hover::content-[''] after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full"
+        >
           Konsultasi
         </nuxt-link>
-        <nuxt-link to="/panduan" class="text-white hover:text-gray-600">
+        <nuxt-link
+          to="/panduan"
+          class="relative text-white hover::content-[''] after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full"
+        >
           Panduan
         </nuxt-link>
-        <a href="#" class="text-white hover:text-gray-600">Brands</a>
       </div>
+
+
 
       <!-- Right Side Icons -->
       <div class="flex items-center space-x-4">

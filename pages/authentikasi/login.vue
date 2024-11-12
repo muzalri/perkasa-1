@@ -122,7 +122,12 @@
               password: this.form.password,
               remember: this.form.remember
             }
-          })
+          });
+              if (response?.data?.success) {
+            const token = response.data.token; // Pastikan token ada di respons
+            localStorage.setItem('token', token); // Simpan token
+            this.$router.push('/dashboard');
+          }
 
           if (response?.data?.success) {
             this.$router.push('/dashboard')

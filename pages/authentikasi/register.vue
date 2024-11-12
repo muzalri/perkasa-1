@@ -146,39 +146,45 @@
       }
     },
     methods: {
-      async handleRegister() {
-        try {
-          this.loading = true
-          this.error = null
-          
-          // Kirim request ke endpoint register Laravel
-          const response = await this.$axios.post('/api/register', {
-            name: this.form.name,
-            email: this.form.email,
-            password: this.form.password,
-            password_confirmation: this.form.password_confirmation,
-            no_hp: this.form.no_hp,
-            alamat: this.form.alamat
-          })
+  async handleRegister() {
+    try {
+      this.loading = true;
+      this.error = null;
+      
+      // Kirim request ke endpoint register Laravel
+      const response = await this.$axios.post('/api/register', {
+        name: this.form.name,
+        email: this.form.email,
+        password: this.form.password,
+        password_confirmation: this.form.password_confirmation,
+        no_hp: this.form.no_hp,
+        alamat: this.form.alamat
+      });
 
-          // Jika berhasil register, langsung login
-          if (response.data) {
-            await this.$auth.loginWith('local', {
-              data: {
-                email: this.form.email,
-                password: this.form.password
-              }
-            })
-            
-            // Redirect ke dashboard
-            this.$router.push('/dashboard')
+      // Jika berhasil register, langsung login
+      if (response.data) {
+        const loginResponse = await this.$auth.loginWith('local', {
+          data: {
+            email: this.form.email,
+            password: this.form.password
           }
-        } catch (err) {
-          this.error = err?.response?.data?.message || 'Terjadi kesalahan saat registrasi'
-        } finally {
-          this.loading = false
+        });
+
+        // Simpan token ke localStorage
+        if (loginResponse?.data?.success) {
+          const token = loginResponse.data.token; // Pastikan token ada di respons
+          localStorage.setItem('token', token); // Simpan token
+          
+          // Redirect ke dashboard
+          this.$router.push('/dashboard');
         }
       }
+    } catch (err) {
+      this.error = err?.response?.data?.message || 'Terjadi kesalahan saat registrasi';
+    } finally {
+      this.loading = false;
     }
+  }
+}
   }
   </script>

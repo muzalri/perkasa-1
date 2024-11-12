@@ -1,15 +1,17 @@
 <template>
+  <div>
+    <!-- Hero Section -->
     <div class="mt-15 p-5 pt-20 px-20 h-screen bg-dark-green text-white flex flex-col">
       <div class="flex-grow flex items-center justify-between px-20">
         <div class="flex-1">
           <h1 class="text-5xl font-extrabold leading-tight">
-            Find the right and best home for your family
+            Belajar Berternak Ikan Mulai dari Sekarang!
           </h1>
           <p class="text-lg mt-4 mb-8 text-gray-300">
-            Discover the perfect place to call home with Homeifye. Explore our wide selection of properties designed for you and your family.
+            Belajar berternak ikan secara mudah, efektif, dan aman. Diawasi pakar mulai dari Rp. 49.999
           </p>
           <button class="bg-white text-dark-green px-6 py-3 rounded-full shadow-md flex items-center space-x-2 hover:shadow-lg">
-            <span>Start exploring</span>
+            <span>Mulai Menjelajah</span>
             <span>&rarr;</span>
           </button>
         </div>
@@ -19,83 +21,126 @@
           src="~/assets/images/scrolldown.png"
           alt="Scroll Down"
           class="w-12 h-12 cursor-pointer hover:opacity-80"
-          @click="scrollToSection"
+          @click="scrollToFeatured"
         />
       </div>
     </div>
-  
-    <section id="new-listings" class="mt-20 px-10">
-      <h2 class="text-4xl font-bold text-dark-green mb-8">New Listings</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+    <!-- Featured Listings Section -->
+    <section id="featured-listings" class="mt-20 px-10 mb-20">
+      <h2 class="text-4xl font-bold text-dark-green mb-8 ml-20">Featured Listings</h2>
+      
+      <!-- Container Utama -->
+      <div class="space-y-8">
         <!-- Card 1 -->
-        <div class="rounded-lg shadow-lg overflow-hidden">
-          <img src="~/assets/images/scrolldown.png" alt="Pine Estates" class="w-full h-64 object-cover" />
-          <div class="p-4">
-            <h3 class="text-xl font-semibold text-dark-green">Pine Estates</h3>
-            <p class="text-sm text-gray-500">222 Spruce Street, Springfield</p>
-            <p class="text-lg font-bold text-orange-500">$180,000</p>
-            <p class="text-sm text-gray-500">1000 Sq.Ft</p>
+        <div class="flex items-center justify-between rounded-lg drop-shadow-2xl p-4 bg-white max-w-3xl mx-auto">
+          <div class="flex items-center">
+            <img src="~/assets/images/logo.png" alt="Pine Estates" class="w-16 h-16 rounded-lg shadow-lg object-cover mr-4" />
+            <div>
+              <h3 class="text-2xl font-bold text-orange-500">Pine Estates</h3>
+              <p class="text-gray-500 text-sm mt-2">Lorem ipsum dolor sit amet...</p>
+              <p class="text-xl font-bold text-dark-green mt-4">$180,000 <span class="text-sm text-gray-500">/Monthly</span></p>
+            </div>
+          </div>
+          <!-- Informasi Tambahan -->
+          <div class="text-right">
+            <p class="text-sm text-gray-800">konsultasi dengan pakar blablablablablabla</p>
           </div>
         </div>
+
+        <!-- Divider -->
+        <div class="border-t border-gray-300"></div>
+
         <!-- Card 2 -->
-        <div class="rounded-lg shadow-lg overflow-hidden">
-          <img src="~/assets/images/scrolldown.png" alt="Maple Grove" class="w-full h-64 object-cover" />
-          <div class="p-4">
-            <h3 class="text-xl font-semibold text-dark-green">Maple Grove</h3>
-            <p class="text-sm text-gray-500">333 Cherry Lane, Springfield</p>
-            <p class="text-lg font-bold text-orange-500">$400,000</p>
-            <p class="text-sm text-gray-500">2200 Sq.Ft</p>
+        <div class="flex items-center justify-between rounded-lg drop-shadow-2xl p-4 bg-white max-w-3xl mx-auto">
+          <div class="flex items-center">
+            <img src="~/assets/images/logo.png" alt="Pine Estates" class="w-16 h-16 rounded-lg shadow-lg object-cover mr-4" />
+            <div>
+              <h3 class="text-2xl font-bold text-orange-500">Pine Estates</h3>
+              <p class="text-gray-500 text-sm mt-2">Lorem ipsum dolor sit amet...</p>
+              <p class="text-xl font-bold text-dark-green mt-4">$180,000 <span class="text-sm text-gray-500">/Monthly</span></p>
+            </div>
+          </div>
+          <!-- Informasi Tambahan -->
+          <div class="text-right">
+            <p class="text-sm text-gray-800">Available Now</p>
+            <p class="text-sm text-gray-800">Contact: 123-456-7890</p>
           </div>
         </div>
+
+        <!-- Divider -->
+        <div class="border-t border-gray-300"></div>
+
         <!-- Card 3 -->
-        <div class="rounded-lg shadow-lg overflow-hidden">
-          <img src="~/assets/images/scrolldown.png" alt="Willow Heights" class="w-full h-64 object-cover" />
-          <div class="p-4">
-            <h3 class="text-xl font-semibold text-dark-green">Willow Heights</h3>
-            <p class="text-sm text-gray-500">444 Ash Boulevard, Springfield</p>
-            <p class="text-lg font-bold text-orange-500">$290,000</p>
-            <p class="text-sm text-gray-500">1600 Sq.Ft</p>
+        <div class="flex items-center justify-between rounded-lg drop-shadow-2xl p-4 bg-white max-w-3xl mx-auto">
+          <div class="flex items-center">
+            <img src="~/assets/images/logo.png" alt="Pine Estates" class="w-16 h-16 rounded-lg shadow-lg object-cover mr-4" />
+            <div>
+              <h3 class="text-2xl font-bold text-orange-500">Pine Estates</h3>
+              <p class="text-gray-500 text-sm mt-2">Lorem ipsum dolor sit amet...</p>
+              <p class="text-xl font-bold text-dark-green mt-4">$180,000 <span class="text-sm text-gray-500">/Monthly</span></p>
+            </div>
+          </div>
+          <!-- Informasi Tambahan -->
+          <div class="text-right">
+            <p class="text-sm text-gray-800">Available Now</p>
+            <p class="text-sm text-gray-800">Contact: 123-456-7890</p>
           </div>
         </div>
       </div>
+
     </section>
+
+    <!-- Footer Section -->
+    <footer class="bg-dark-green text-white py-10">
+      <div class="container mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-2xl font-bold mb-4">Perkasa</h3>
+          <p class="text-gray-400 text-sm mb-4">Copyright © 2020 Perkasa<br />All rights reserved</p>
+        </div>
+      </div>
+    </footer>
+  </div>
 </template>
+
 <script>
 export default {
-    name: 'DashboardPage',
-    middleware: ['auth'],
-    methods: {
-        scrollToSection() {
-            const section = document.querySelector("#new-listings"); // Ganti #target-section dengan ID elemen tujuan
-            section.scrollIntoView({ behavior: "smooth" });
-        }
+  name: 'DashboardPage',
+  middleware: ['auth'],
+  methods: {
+    scrollToFeatured() {
+      const featured = document.getElementById('featured-listings');
+      if (featured) {
+        featured.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        console.error("Element with ID 'featured-listings' not found.");
+      }
     }
+  }
 }
-
 </script>
-
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 
 html {
-    font-family: 'Plus Jakarta Sans';
+  font-family: 'Plus Jakarta Sans';
 }
 
 .custom-rounded {
-    border-radius: 70px; /* Atur nilai sesuai kebutuhan */
+  border-radius: 70px;
 }
 
 .animated-image {
-    animation: scaleIn 1s forwards; /* Menambahkan animasi */
+  animation: scaleIn 1s forwards;
 }
 
 @keyframes scaleIn {
-    0% {
-        transform: scale(1.5); /* Ukuran awal lebih besar */
-    }
-    100% {
-        transform: scale(1); /* Ukuran akhir normal */
-    }
+  0% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>
 

@@ -29,7 +29,8 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
-    '@nuxtjs/auth-next'
+    '@nuxtjs/auth-next',
+    '@nuxtjs/dotenv',
   ],
 
   // Build modules
@@ -43,7 +44,7 @@ export default {
 
   // Axios configuration
   axios: {
-    baseURL: 'http://localhost:8000'
+     baseURL: process.env.API_URL || 'http://localhost:8000/api'
   },
 
   // Auth configuration
@@ -61,9 +62,9 @@ export default {
           autoFetch: true
         },
         endpoints: {
-          login: { url: '/api/login', method: 'post' },
-          logout: { url: '/api/logout', method: 'post' },
-          user: { url: '/api/profile', method: 'get' }
+          login: { url: '/login', method: 'post' },
+          logout: { url: '/logout', method: 'post' },
+          user: { url: '/profile', method: 'get' }
         }
       }
     },
