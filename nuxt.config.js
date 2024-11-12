@@ -44,7 +44,7 @@ export default {
 
   // Axios configuration
   axios: {
-     baseURL: process.env.API_URL || 'http://localhost:8000/api'
+     baseURL: 'https://perkasa.miauwlan.com/api'
   },
 
   // Auth configuration
