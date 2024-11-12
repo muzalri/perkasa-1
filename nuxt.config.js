@@ -44,7 +44,7 @@ export default {
 
   // Axios configuration
   axios: {
-     baseURL: 'http://localhost:8000/api/'
+     baseURL: 'http://localhost:8000/api'
   },
 
   // Auth configuration
