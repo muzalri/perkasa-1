@@ -124,7 +124,7 @@ export default {
     getUserImage(profilePath) {
       return profilePath 
         ? `http://localhost:8000/storage/${profilePath}` 
-        : '/default-avatar.png';  // Gambar default untuk profile
+        : require('~/assets/images/anwar.png');  // Menggunakan require untuk gambar dari assets
     },
     formatDate(date) {
       const options = { year: 'numeric', month: 'long', day: 'numeric' };

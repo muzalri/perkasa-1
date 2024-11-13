@@ -115,8 +115,8 @@ export default {
     },
     getUserImage(profilePath) {
       return profilePath
-        ? `http://localhost:${this.imagePort}/storage/${profilePath}`
-        : '/default-avatar.png';
+        ? `http://localhost:8000/storage/${profilePath}`
+        : require('~/assets/images/anwar.png'); 
     },
     formatDate(date) {
       const options = { year: 'numeric', month: 'short', day: 'numeric' };
