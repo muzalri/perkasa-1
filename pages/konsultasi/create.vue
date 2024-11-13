@@ -1,48 +1,66 @@
 <template>
-  <div class="max-w-2xl mx-auto p-6">
-    <h1 class="text-2xl font-bold mb-6">Buat Konsultasi Baru</h1>
-    
-    <form @submit.prevent="submitConsultation" class="space-y-6">
+  <div class="container mx-auto px-4 py-8 mt-20">
+    <h1 class="text-3xl font-bold text-teal-800 mb-6">Buat Konsultasi Baru</h1>
+    <form @submit.prevent="submitForm" class="space-y-4">
+      <!-- Judul -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">
-          Judul
-        </label>
-        <input 
-          v-model="form.title"
+        <label for="title" class="block text-sm font-medium text-gray-700">Judul</label>
+        <input
           type="text"
-          class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          id="title"
+          v-model="form.title"
+          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
           required
-        >
+        />
       </div>
 
+      <!-- Kategori -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">
-          Pilih Pakar
-        </label>
-        <select 
-          v-model="form.expert"
-          class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        <label for="category" class="block text-sm font-medium text-gray-700">Kategori</label>
+        <select
+          id="category"
+          v-model="form.category"
+          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
           required
         >
-          <option value="">Pilih Pakar Ahli</option>
-          <option v-for="expert in experts" :key="expert.id" :value="expert.id">
-            {{ expert.name }}
+          <option value="" disabled>Pilih Kategori</option>
+          <option v-for="category in categories" :key="category.id" :value="category.id">
+            {{ category.name }}
           </option>
         </select>
       </div>
 
-      <div class="flex justify-end space-x-4">
-        <NuxtLink 
-          to="/konsultasi"
-          class="px-4 py-2 border rounded-lg hover:bg-gray-50"
-        >
-          Batal
-        </NuxtLink>
-        <button 
+      <!-- Isi Konsultasi -->
+      <div>
+        <label for="content" class="block text-sm font-medium text-gray-700">Isi Konsultasi</label>
+        <textarea
+          id="content"
+          v-model="form.content"
+          rows="5"
+          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
+          required
+        ></textarea>
+      </div>
+
+      <!-- Gambar -->
+      <div>
+        <label for="image" class="block text-sm font-medium text-gray-700">Gambar (opsional)</label>
+        <input
+          type="file"
+          id="image"
+          @change="handleImageUpload"
+          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
+          accept="image/*"
+        />
+      </div>
+
+      <!-- Tombol Submit -->
+      <div class="flex justify-end">
+        <button
           type="submit"
-          class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+          class="bg-gradient-to-t from-[#064e50] to-[#0A585B] text-white px-6 py-3 rounded-lg shadow-md hover:opacity-90 transition"
         >
-          Buat Konsultasi
+          Publikasikan
         </button>
       </div>
     </form>
@@ -55,18 +73,58 @@ export default {
     return {
       form: {
         title: '',
-        expert: ''
+        category: '',
+        content: '',
+        image: null,
       },
-      experts: [
-        { id: 1, name: 'Pakar Ahli 1' },
-        { id: 2, name: 'Pakar Ahli 2' }
-      ]
-    }
+      categories: [],
+    };
+  },
+  async created() {
+    await this.fetchCategories();
   },
   methods: {
-    async submitConsultation() {
-      // Implement submission logic
-    }
-  }
-}
+    async fetchCategories() {
+      try {
+        const { data } = await this.$axios.get('/konsultasi/categories');
+        this.categories = data.data;
+      } catch (error) {
+        console.error('Gagal mengambil kategori:', error);
+      }
+    },
+    handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.form.image = file;
+      }
+    },
+    async submitForm() {
+      const formData = new FormData();
+      formData.append('title', this.form.title);
+      formData.append('category', this.form.category);
+      formData.append('content', this.form.content);
+      if (this.form.image) {
+        formData.append('image', this.form.image);
+      }
+
+      try {
+        const { data } = await this.$axios.post('/konsultasi', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        alert('Konsultasi berhasil dibuat!');
+        this.$router.push(`/konsultasi/${data.data.id}`);
+      } catch (error) {
+        console.error('Gagal membuat konsultasi:', error.response.data);
+      }
+    },
+  },
+};
 </script>
+
+<style scoped>
+.container {
+  max-width: 75%;
+}
+</style>

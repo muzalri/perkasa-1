@@ -8,7 +8,9 @@ module.exports = {
   ],
   theme: {
     extend: {
-  
+      margin: {
+        '18px': '18px',
+      },
 
       colors: {
         'perkasa': {
