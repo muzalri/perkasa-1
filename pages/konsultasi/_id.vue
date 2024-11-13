@@ -3,7 +3,7 @@
       <!-- Tombol Kembali -->
       <div class="max-w-600px mx-auto mb-4 px-4 mt-20 ml-40">
         <nuxt-link 
-          to="/komunitas" 
+          to="/konsultasi" 
           class="flex items-center text-teal-600 hover:text-teal-800 mb-4"
         >
           <i class="fas fa-arrow-left mr-2"></i> Kembali
