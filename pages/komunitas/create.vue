@@ -122,7 +122,7 @@
             },
             });
             alert('Artikel berhasil dibuat!');
-            this.$router.push(`/komunitas/show/${data.data.id}`);
+            this.$router.push(`/komunitas/${data.data.id}`);
         } catch (error) {
             console.error('Gagal membuat artikel:', error.response.data);
         }

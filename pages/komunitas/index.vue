@@ -66,18 +66,20 @@
           />
         </div>
 
-        <!-- Tombol Like -->
+        <!-- Tombol Like dan Komentar -->
         <div class="px-6 py-4 bg-gray-100 flex justify-between items-center">
           <div class="flex items-center space-x-6">
             <button
               class="flex items-center text-teal-600 hover:text-teal-800"
               @click.stop="toggleLike(komunitasItem.id)"
             >
-              <i class="fa fa-thumbs-up mr-1"></i> {{ komunitasItem.likes ? komunitasItem.likes.length : 0 }}
+              <i class="fa fa-thumbs-up mr-1"></i> 
+              {{ komunitasItem.likes ? komunitasItem.likes.length : 0 }}
             </button>
-            <button class="flex items-center text-yellow-500 hover:text-yellow-700">
-              <i class="fa fa-comment mr-1"></i> {{ komunitasItem.comments_count }}
-            </button>
+            <div class="flex items-center text-yellow-500">
+              <i class="fa fa-comment mr-1"></i> 
+              {{ komunitasItem.komentars ? komunitasItem.komentars.length : 0 }}
+            </div>
           </div>
           <span class="text-sm text-gray-500">{{ komunitasItem.category.name }}</span>
         </div>
