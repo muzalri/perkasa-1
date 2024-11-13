@@ -4,54 +4,42 @@
     <form @submit.prevent="submitForm" class="space-y-4">
       <!-- Judul -->
       <div>
-        <label for="title" class="block text-sm font-medium text-gray-700">Judul</label>
+        <label for="judul" class="block text-sm font-medium text-gray-700">Judul</label>
         <input
           type="text"
-          id="title"
-          v-model="form.title"
+          id="judul"
+          v-model="form.judul"
           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
           required
         />
       </div>
 
-      <!-- Kategori -->
-      <div>
-        <label for="category" class="block text-sm font-medium text-gray-700">Kategori</label>
-        <select
-          id="category"
-          v-model="form.category"
-          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-          required
-        >
-          <option value="" disabled>Pilih Kategori</option>
-          <option v-for="category in categories" :key="category.id" :value="category.id">
-            {{ category.name }}
-          </option>
-        </select>
-      </div>
-
       <!-- Isi Konsultasi -->
       <div>
-        <label for="content" class="block text-sm font-medium text-gray-700">Isi Konsultasi</label>
+        <label for="deskripsi" class="block text-sm font-medium text-gray-700">Isi Konsultasi</label>
         <textarea
-          id="content"
-          v-model="form.content"
+          id="deskripsi"
+          v-model="form.deskripsi"
           rows="5"
           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
           required
         ></textarea>
       </div>
 
-      <!-- Gambar -->
+      <!-- Pilih Pakar -->
       <div>
-        <label for="image" class="block text-sm font-medium text-gray-700">Gambar (opsional)</label>
-        <input
-          type="file"
-          id="image"
-          @change="handleImageUpload"
+        <label for="pakar_id" class="block text-sm font-medium text-gray-700">Pilih Pakar</label>
+        <select
+          id="pakar_id"
+          v-model="form.pakar_id"
           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-          accept="image/*"
-        />
+          required
+        >
+          <option value="" disabled>Pilih Pakar</option>
+          <option v-for="pakar in pakarList" :key="pakar.id" :value="pakar.id">
+            {{ pakar.name }}
+          </option>
+        </select>
       </div>
 
       <!-- Tombol Submit -->
@@ -72,24 +60,24 @@ export default {
   data() {
     return {
       form: {
-        title: '',
-        category: '',
-        content: '',
+        judul: '',
+        deskripsi: '',
+        pakar_id: '',
         image: null,
       },
-      categories: [],
+      pakarList: [], // Daftar pakar dari API
     };
   },
   async created() {
-    await this.fetchCategories();
+    await this.fetchPakarList();
   },
   methods: {
-    async fetchCategories() {
+    async fetchPakarList() {
       try {
-        const { data } = await this.$axios.get('/konsultasi/categories');
-        this.categories = data.data;
+        const { data } = await this.$axios.get('/konsultasi/pakar'); // Endpoint untuk mengambil daftar pakar
+        this.pakarList = data.data;
       } catch (error) {
-        console.error('Gagal mengambil kategori:', error);
+        console.error('Gagal mengambil daftar pakar:', error);
       }
     },
     handleImageUpload(event) {
@@ -100,12 +88,9 @@ export default {
     },
     async submitForm() {
       const formData = new FormData();
-      formData.append('title', this.form.title);
-      formData.append('category', this.form.category);
-      formData.append('content', this.form.content);
-      if (this.form.image) {
-        formData.append('image', this.form.image);
-      }
+      formData.append('judul', this.form.judul);
+      formData.append('deskripsi', this.form.deskripsi);
+      formData.append('pakar_id', this.form.pakar_id);
 
       try {
         const { data } = await this.$axios.post('/konsultasi', formData, {
@@ -117,6 +102,7 @@ export default {
         this.$router.push(`/konsultasi/${data.data.id}`);
       } catch (error) {
         console.error('Gagal membuat konsultasi:', error.response.data);
+        alert('Terjadi kesalahan, coba lagi.');
       }
     },
   },

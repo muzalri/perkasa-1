@@ -39,7 +39,7 @@
         v-for="komunitasItem in komunitas"
         :key="komunitasItem.id"
         class="bg-white shadow-md rounded-lg overflow-hidden cursor-pointer"
-        @click="goToDetail(komunitasItem.id)"
+        @click="goToDetail(konsultasi.id)"
       >
         <!-- Header Artikel -->
         <div class="p-6">
@@ -123,7 +123,7 @@ export default {
       return new Date(date).toLocaleDateString('id-ID', options);
     },
     goToDetail(id) {
-      this.$router.push(`/komunitas/${id}`);
+      this.$router.push(`/konsultasi/${id}`);
     },
     async toggleLike(komunitasId) {
       try {
