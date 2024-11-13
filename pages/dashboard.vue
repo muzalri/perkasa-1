@@ -18,7 +18,11 @@
         </div>
         <!-- Image -->
         <div class="mt-8 md:mt-0 md:mr-40">
-          <img src="~/assets/images/peternak.png" alt="Peternak Ikan" class="w-60 md:w-80 mx-auto mt-20" />
+          <img 
+            src="~/assets/images/peternak.png" 
+            alt="Peternak Ikan" 
+            class="w-72 md:w-[400px] lg:w-[480px] mx-auto mt-20" 
+          />
         </div>
       </div>
       <!-- Background Pattern -->

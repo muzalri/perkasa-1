@@ -1,39 +1,68 @@
 <template>
     <div class="body pt-16 py-16">
+      <!-- Tombol Kembali -->
+      <div class="max-w-600px mx-auto mb-4 px-4 mt-20 ml-40">
+        <NuxtLink 
+          to="/konsultasi" 
+          class="inline-flex items-center text-gray-600 hover:text-gray-800 transition-colors"
+        >
+          <img 
+            src="~/assets/images/kembali.png"
+            alt="Kembali"
+            width="24" 
+            height="24" 
+            class="mr-2"
+          />
+          Kembali
+        </NuxtLink>
+      </div>
+  
       <div class="chat-container mt-20">
         <!-- Header Chat -->
         <div class="chat-header">
           <h2>{{ konsultasi.judul }}</h2>
-          <p>{{ konsultasi.pakar.name }}</p>
+          <p>{{ konsultasi.pakar?.name }}</p>
         </div>
   
         <!-- Pesan Chat -->
-        <div class="chat-messages" ref="chatMessages">
+        <div 
+          class="chat-messages" 
+          ref="chatMessages"
+          v-if="konsultasi.pesans && konsultasi.pesans.length"
+        >
           <div
             v-for="pesan in konsultasi.pesans"
             :key="pesan.id"
-            :class="['chat-message', pesan.user_id === userId ? 'sent' : 'received']"
+            :class="[
+              'chat-message',
+              pesan.user_id === $auth.user.id ? 'sent' : 'received'
+            ]"
           >
             <div class="message-content">
-              <p v-if="pesan.isi">{{ pesan.isi }}</p>
-              <img
-                v-if="pesan.gambar_url"
-                :src="pesan.gambar_url"
-                alt="Gambar Pesan"
-                class="message-image"
-              />
+              <div class="message-header">
+                <img 
+                  :src="getUserImage(pesan.user?.profile_photo)"
+                  class="avatar"
+                  alt="User Avatar"
+                />
+                <span class="username">{{ pesan.user?.name }}</span>
+              </div>
+              <div class="message-bubble">
+                <p v-if="pesan.isi">{{ pesan.isi }}</p>
+                <img
+                  v-if="pesan.gambar_url"
+                  :src="pesan.gambar_url"
+                  alt="Gambar Pesan"
+                  class="message-image"
+                />
+              </div>
               <span class="message-time">{{ formatDate(pesan.created_at) }}</span>
             </div>
           </div>
         </div>
   
         <!-- Input Chat -->
-        <div class="chat-input">
-          <textarea
-            v-model="pesanBaru"
-            placeholder="Tulis pesan..."
-            @keyup.enter="kirimPesan"
-          ></textarea>
+        <div class="chat-input bg-white rounded-lg shadow-sm p-3 flex items-center gap-3">
           <input
             type="file"
             ref="fileInput"
@@ -41,8 +70,28 @@
             accept="image/*"
             class="hidden"
           />
-          <button @click="triggerFileInput">📎</button>
-          <button @click="kirimPesan">Kirim</button>
+          <button 
+            @click="$refs.fileInput.click()" 
+            class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100"
+          >
+            <img 
+              src="~/assets/images/link.png" 
+              alt="Upload Image"
+              class="w-10 h-6"
+            />
+          </button>
+          <input
+            v-model="newMessage"
+            type="text"
+            placeholder="Ketik pesan..."
+            class="flex-1 h-10 px-4 text-gray-700 bg-transparent outline-none"
+          />
+          <button 
+            @click="sendMessage" 
+            class="px-6 py-2 bg-teal-800 text-white rounded-lg hover:bg-teal-700 transition-colors"
+          >
+            Kirim
+          </button>
         </div>
       </div>
     </div>
@@ -54,83 +103,81 @@
       return {
         konsultasi: {
           judul: '',
-          pakar: { name: '' },
-          pesans: [],
+          pakar: {},
+          pesans: []
         },
-        pesanBaru: '',
-        userId: null, // Ganti dengan ID pengguna saat ini
-        selectedFile: null,
-      };
+        newMessage: '',
+        imagePort: 8000
+      }
     },
-    async created() {
-      await this.fetchKonsultasi();
-      this.scrollToBottom();
+    async mounted() {
+      await this.fetchKonsultasi()
+      this.scrollToBottom()
     },
     methods: {
       async fetchKonsultasi() {
         try {
-          const { data } = await this.$axios.get(`/konsultasi/${this.$route.params.id}`);
-          this.konsultasi = data.data;
-          this.userId = data.user_id; // Asumsikan API mengembalikan ID pengguna saat ini
+          const { data } = await this.$axios.get(`/konsultasi/${this.$route.params.id}`)
+          this.konsultasi = data.data
+          this.$nextTick(() => {
+            this.scrollToBottom()
+          })
         } catch (error) {
-          console.error('Gagal mengambil detail konsultasi:', error);
+          console.error('Gagal mengambil data konsultasi:', error)
         }
-      },
-      triggerFileInput() {
-        this.$refs.fileInput.click();
-      },
-      handleFileUpload(event) {
-        const file = event.target.files[0];
-        if (file && file.type.startsWith('image/')) {
-          this.selectedFile = file;
-          this.kirimPesan();
-        } else {
-          alert('Harap pilih file gambar.');
-        }
-      },
-      async kirimPesan() {
-        if (!this.pesanBaru.trim() && !this.selectedFile) return;
-  
-        const formData = new FormData();
-        formData.append('isi', this.pesanBaru);
-        if (this.selectedFile) {
-          formData.append('gambar', this.selectedFile);
-        }
-  
-        try {
-          const { data } = await this.$axios.post(
-            `/konsultasi/${this.konsultasi.id}/pesan`,
-            formData,
-            {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
-            }
-          );
-          this.konsultasi.pesans.push(data.data);
-          this.pesanBaru = '';
-          this.selectedFile = null;
-          this.$refs.fileInput.value = '';
-          this.scrollToBottom();
-        } catch (error) {
-          console.error('Gagal mengirim pesan:', error);
-        }
-      },
-      formatDate(date) {
-        const options = { hour: '2-digit', minute: '2-digit' };
-        return new Date(date).toLocaleTimeString('id-ID', options);
       },
       scrollToBottom() {
-        this.$nextTick(() => {
-          const chatMessages = this.$refs.chatMessages;
-          chatMessages.scrollTop = chatMessages.scrollHeight;
-        });
+        if (this.$refs.chatMessages) {
+          this.$refs.chatMessages.scrollTop = this.$refs.chatMessages.scrollHeight
+        }
       },
-    },
-  };
+      getUserImage(profilePath) {
+        return profilePath
+          ? `http://localhost:${this.imagePort}/storage/${profilePath}`
+          : require('~/assets/images/anwar.png')
+      },
+      formatDate(date) {
+        const options = { hour: '2-digit', minute: '2-digit' }
+        return new Date(date).toLocaleTimeString('id-ID', options)
+      },
+      async sendMessage() {
+        if (!this.newMessage.trim()) return
+
+        try {
+          await this.$axios.post(`/konsultasi/${this.$route.params.id}/pesan`, {
+            isi: this.newMessage
+          })
+          this.newMessage = ''
+          await this.fetchKonsultasi()
+          this.$nextTick(() => {
+            this.scrollToBottom()
+          })
+        } catch (error) {
+          console.error('Gagal mengirim pesan:', error)
+        }
+      },
+      async handleFileUpload(event) {
+        const file = event.target.files[0]
+        if (!file) return
+
+        const formData = new FormData()
+        formData.append('gambar', file)
+
+        try {
+          await this.$axios.post(`/konsultasi/${this.$route.params.id}/pesan/gambar`, formData)
+          await this.fetchKonsultasi()
+          this.$nextTick(() => {
+            this.scrollToBottom()
+          })
+        } catch (error) {
+          console.error('Gagal mengunggah gambar:', error)
+        }
+      }
+    }
+  }
   </script>
   
-  <style>
+  <style scoped>
   .body {
     background-image: url('~/assets/images/pattern.png'); /* Ganti dengan path pattern Anda */
     background-size: 1000px 1000px; /* Mengatur ukuran pattern menjadi kecil */
@@ -160,64 +207,92 @@
   
   .chat-messages {
     flex: 1;
-    padding: 16px;
     overflow-y: auto;
-    background-color: #f9f9f9;
+    padding: 20px;
   }
   
   .chat-message {
+    margin-bottom: 20px;
     display: flex;
-    margin-bottom: 12px;
-  }
-  
-  .chat-message.sent {
-    justify-content: flex-end;
-  }
-  
-  .chat-message.received {
-    justify-content: flex-start;
+    flex-direction: column;
   }
   
   .message-content {
     max-width: 70%;
     padding: 10px;
-    border-radius: 8px;
-    background-color: #e0f7fa;
-    position: relative;
+    border-radius: 12px;
   }
   
-  .chat-message.sent .message-content {
+  .sent {
+    align-items: flex-end;
+  }
+  
+  .sent .message-content {
     background-color: #064e50;
-    color: #fff;
+    color: white;
+    margin-left: auto;
+  }
+  
+  .received {
+    align-items: flex-start;
+  }
+  
+  .received .message-content {
+    background-color: #f0f0f0;
+    color: black;
+  }
+  
+  .message-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  .avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  
+  .username {
+    font-size: 0.9em;
+    font-weight: 500;
+  }
+  
+  .message-bubble {
+    padding: 8px 12px;
+    border-radius: 12px;
   }
   
   .message-time {
-    display: block;
+    font-size: 0.8em;
     margin-top: 4px;
-    font-size: 0.75rem;
-    color: #666;
-    text-align: right;
+    opacity: 0.7;
   }
   
   .message-image {
-    max-width: 100%;
+    max-width: 200px;
     border-radius: 8px;
     margin-top: 8px;
   }
   
   .chat-input {
     display: flex;
-    padding: 16px;
-    background-color: #fff;
-    border-top: 1px solid #ccc;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: white;
+    border-top: 1px solid #e5e7eb;
   }
   
   .chat-input textarea {
     flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    resize: none;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+    line-height: 1.5;
   }
   
   .chat-input input[type='file'] {
@@ -236,6 +311,19 @@
   
   .chat-input button:hover {
     background-color: #053d3e;
+  }
+  
+  .upload-btn, .send-btn {
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #064e50;
+    color: white;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+  
+  .upload-btn:hover, .send-btn:hover {
+    opacity: 0.9;
   }
   </style>
   

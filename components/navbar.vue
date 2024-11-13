@@ -37,11 +37,39 @@
       <!-- Right Side Icons -->
       <div class="flex items-center space-x-4">
         <!-- Profile Button -->
-        <button class="p-2 hover:bg-gray-700 rounded-full bg-white">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-        </button>
+        <NuxtLink 
+          to="/profile" 
+          class="p-2 hover:bg-gray-100 rounded-full bg-white transition-colors"
+        >
+          <div class="flex items-center space-x-2">
+            <div class="relative">
+              <img 
+                v-if="$auth.user?.profile_photo"
+                :src="`http://localhost:8000/storage/${$auth.user.profile_photo}`"
+                class="h-8 w-8 rounded-full object-cover"
+                alt="Profile Photo"
+              />
+              <svg 
+                v-else
+                xmlns="http://www.w3.org/2000/svg" 
+                class="h-6 w-6 text-teal-800" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="2" 
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
+                />
+              </svg>
+            </div>
+            <span v-if="$auth.user" class="text-sm text-teal-800 font-medium hidden md:block">
+              {{ $auth.user.name }}
+            </span>
+          </div>
+        </NuxtLink>
 
         <!-- Dark Mode Toggle -->
         <button class="p-2 bg-white rounded-full hover:bg-black">
