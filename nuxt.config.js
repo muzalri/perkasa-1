@@ -15,6 +15,7 @@ export default {
     ]
   },
 
+
   // Global CSS
   css: [
     '@/assets/css/tailwind.css'
@@ -78,6 +79,7 @@ export default {
       namespace: 'auth'
     }
   },
+  
 
   // Router configuration
   router: {

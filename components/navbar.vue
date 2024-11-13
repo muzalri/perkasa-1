@@ -3,10 +3,7 @@
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <!-- Logo -->
       <div class="flex items-center">
-        <!-- <h1 class="text-2xl font-bold">PERKASA</h1> -->
-        <nuxt-link to ="/dashboard"class="text-2xl text-white font-bold"
-        >PERKASA
-        </nuxt-link>
+        <nuxt-link to="/dashboard" class="text-2xl text-white font-bold">PERKASA</nuxt-link>
       </div>
 
       <!-- Menu Items -->
@@ -37,8 +34,6 @@
         </nuxt-link>
       </div>
 
-
-
       <!-- Right Side Icons -->
       <div class="flex items-center space-x-4">
         <!-- Profile Button -->
@@ -61,4 +56,16 @@
 </template>
 
 <script>
+export default {
+  data() {
+    return {
+      isHidden: false, // Atur default untuk tidak tersembunyi
+    };
+  },
+  methods: {
+    toggleNavbar() {
+      this.isHidden = !this.isHidden; // Metode untuk toggle navbar
+    },
+  },
+};
 </script>

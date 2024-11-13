@@ -73,7 +73,7 @@
               class="flex items-center text-teal-600 hover:text-teal-800"
               @click.stop="toggleLike(komunitasItem.id)"
             >
-              <i class="fa fa-thumbs-up mr-1"></i> {{ komunitasItem.likes.length }}
+              <i class="fa fa-thumbs-up mr-1"></i> {{ komunitasItem.likes ? komunitasItem.likes.length : 0 }}
             </button>
             <button class="flex items-center text-yellow-500 hover:text-yellow-700">
               <i class="fa fa-comment mr-1"></i> {{ komunitasItem.comments_count }}
@@ -104,9 +104,10 @@ export default {
     async fetchKomunitas() {
       try {
         const { data } = await this.$axios.get('/komunitas');
-        this.komunitas = data.data.data;
+        this.komunitas = data.data.data || [];
       } catch (error) {
-        console.error('Gagal mengambil data:', error);
+        console.error('Gagal mengambil komunitas:', error);
+        this.komunitas = [];
       }
     },
     getImageUrl(imagePath) {
