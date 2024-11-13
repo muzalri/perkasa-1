@@ -61,35 +61,4 @@
 </template>
 
 <script>
-export default {
-name: 'Navbar',
-data() {
-  return {
-    lastScrollY: 0,
-    isHidden: false,
-  };
-},
-mounted() {
-  window.addEventListener('scroll', this.handleScroll);
-},
-beforeDestroy() {
-  window.removeEventListener('scroll', this.handleScroll);
-},
-methods: {
-  handleScroll() {
-    if (window.scrollY > this.lastScrollY) {
-      this.isHidden = true; // Scroll down
-    } else {
-      this.isHidden = false; // Scroll up
-    }
-    this.lastScrollY = window.scrollY;
-  },
-},
-};
 </script>
-
-<style>
-.transform {
-transition: transform 0.3s ease;
-}
-</style>
