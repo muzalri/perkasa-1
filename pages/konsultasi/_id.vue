@@ -2,19 +2,12 @@
     <div class="body pt-16 py-16">
       <!-- Tombol Kembali -->
       <div class="max-w-600px mx-auto mb-4 px-4 mt-20 ml-40">
-        <NuxtLink 
-          to="/konsultasi" 
-          class="inline-flex items-center text-gray-600 hover:text-gray-800 transition-colors"
+        <nuxt-link 
+          to="/komunitas" 
+          class="flex items-center text-teal-600 hover:text-teal-800 mb-4"
         >
-          <img 
-            src="~/assets/images/kembali.png"
-            alt="Kembali"
-            width="24" 
-            height="24" 
-            class="mr-2"
-          />
-          Kembali
-        </NuxtLink>
+          <i class="fas fa-arrow-left mr-2"></i> Kembali
+        </nuxt-link>
       </div>
   
       <div class="chat-container mt-20">

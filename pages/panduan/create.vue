@@ -100,7 +100,8 @@ export default {
         video: null
       },
       categories: [],
-      imagePreview: null
+      imagePreview: null,
+      loading: false
     }
   },
   async created() {
@@ -122,6 +123,16 @@ export default {
     handleImageUpload(event) {
       const file = event.target.files[0]
       if (file) {
+        if (file.size > 2 * 1024 * 1024) {
+          alert('Ukuran file terlalu besar. Maksimal 2MB')
+          event.target.value = ''
+          return
+        }
+        if (!['image/jpeg', 'image/png'].includes(file.type)) {
+          alert('Format file tidak didukung. Gunakan JPG atau PNG')
+          event.target.value = ''
+          return
+        }
         this.form.image = file
         this.createImagePreview(file)
       }
@@ -140,23 +151,37 @@ export default {
       reader.readAsDataURL(file)
     },
     async submitForm() {
-      const formData = new FormData()
-      formData.append('title', this.form.title)
-      formData.append('content', this.form.content)
-      formData.append('category_id', this.form.category_id)
-      if (this.form.image) formData.append('image', this.form.image)
-      if (this.form.video) formData.append('video', this.form.video)
-
       try {
-        const { data } = await this.$axios.post('/guide-books', formData, {
+        this.loading = true
+        const formData = new FormData()
+        formData.append('title', this.form.title)
+        formData.append('content', this.form.content)
+        formData.append('category_id', this.form.category_id)
+        if (this.form.image) formData.append('image', this.form.image)
+        if (this.form.video) formData.append('video', this.form.video)
+
+        const response = await this.$axios.post('/guide-books', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         })
-        this.$router.push(`/panduan/${data.data.id}`)
+
+        if (response.data.success) {
+          this.$router.push('/panduan')
+          alert('Panduan berhasil dibuat!')
+        }
+
       } catch (error) {
-        console.error('Gagal membuat panduan:', error)
-        alert('Terjadi kesalahan saat membuat panduan')
+        let errorMessage = 'Terjadi kesalahan saat membuat panduan'
+        
+        if (error.response) {
+          errorMessage = error.response.data.message || errorMessage
+        }
+        
+        alert(errorMessage)
+        console.error('Detail error:', error)
+      } finally {
+        this.loading = false
       }
     }
   }
