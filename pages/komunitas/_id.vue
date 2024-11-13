@@ -91,7 +91,7 @@ export default {
     try {
       const { data } = await $axios.get(`http://localhost:8000/api/komunitas/${params.id}`);
       return { 
-        komunitas: data.data.data[0] // Karena data berada di dalam array data.data.data
+        komunitas: data.data // Langsung akses data.data karena response sudah benar
       };
     } catch (error) {
       console.error('Failed to fetch komunitas data:', error);
@@ -112,7 +112,7 @@ export default {
         );
 
         this.userLiked = response.data.is_like;
-        this.komunitas.likes_count = response.data.likes_count;
+        this.komunitas.likes_count = response.data.data.likes_count;
       } catch (error) {
         console.error('Gagal mengubah status like:', error);
       }
@@ -132,7 +132,7 @@ export default {
     },
   },
   mounted() {
-    if (this.komunitas.likes) {
+    if (this.komunitas && this.komunitas.likes) {
       this.userLiked = this.komunitas.likes.some(
         (like) => like.user_id === this.$auth?.user?.id
       );
