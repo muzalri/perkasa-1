@@ -20,13 +20,13 @@
               </div>
             </div>
   
-            <div v-if="komunitas.image" class="mb-6">
+          
               <img
                 :src="getImageUrl(komunitas.image)"
                 alt="Article image"
                 class="w-full h-auto rounded-lg"
               />
-            </div>
+            
   
             <div v-if="komunitas.body" class="mb-6">
               <p class="text-gray-700 text-lg leading-relaxed">{{ komunitas.body }}</p>
@@ -89,12 +89,10 @@ export default {
   },
   async asyncData({ params, $axios }) {
     try {
-      const { data } = await $axios.get(`http://localhost:8000/api/komunitas/${params.id}`, {
-        headers: {
-          Authorization: `Bearer ${process.client ? localStorage.getItem('token') : ''}`,
-        },
-      });
-      return { komunitas: data.data };
+      const { data } = await $axios.get(`http://localhost:8000/api/komunitas/${params.id}`);
+      return { 
+        komunitas: data.data.data[0] // Karena data berada di dalam array data.data.data
+      };
     } catch (error) {
       console.error('Failed to fetch komunitas data:', error);
       return { komunitas: {} };
@@ -119,13 +117,14 @@ export default {
         console.error('Gagal mengubah status like:', error);
       }
     },
+    
     getImageUrl(imagePath) {
-      return `http://localhost:8000/storage/${imagePath}`;
+      return imagePath ? `http://localhost:8000/storage/${imagePath}` : '';
     },
     getUserImage(profilePath) {
-      return profilePath
-        ? `http://localhost:8000/storage/${profilePath}`
-        : '/default-avatar.png';
+      return profilePath 
+        ? `http://localhost:8000/storage/${profilePath}` 
+        : '/default-avatar.png';  // Gambar default untuk profile
     },
     formatDate(date) {
       const options = { year: 'numeric', month: 'long', day: 'numeric' };

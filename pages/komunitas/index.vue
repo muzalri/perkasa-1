@@ -101,9 +101,6 @@ export default {
     await this.fetchKomunitas();
   },
   methods: {
-    goToDetail(id) {
-      this.$router.push(`/komunitas/${id}`);
-    },
     async fetchKomunitas() {
       try {
         const { data } = await this.$axios.get('/komunitas');
