@@ -96,7 +96,7 @@ export default {
       });
       return { komunitas: data.data };
     } catch (error) {
-      console.error('Gagal mengambil data komunitas:', error);
+      console.error('Failed to fetch komunitas data:', error);
       return { komunitas: {} };
     }
   },

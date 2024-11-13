@@ -39,7 +39,7 @@
         v-for="komunitasItem in komunitas"
         :key="komunitasItem.id"
         class="bg-white shadow-md rounded-lg overflow-hidden cursor-pointer"
-        @click="goToDetail(konsultasi.id)"
+        @click="goToDetail(komunitasItem.id)"
       >
         <!-- Header Artikel -->
         <div class="p-6">
@@ -101,6 +101,9 @@ export default {
     await this.fetchKomunitas();
   },
   methods: {
+    goToDetail(id) {
+      this.$router.push(`/komunitas/${id}`);
+    },
     async fetchKomunitas() {
       try {
         const { data } = await this.$axios.get('/komunitas');
@@ -123,7 +126,7 @@ export default {
       return new Date(date).toLocaleDateString('id-ID', options);
     },
     goToDetail(id) {
-      this.$router.push(`/konsultasi/${id}`);
+      this.$router.push(`/komunitas/${id}`);
     },
     async toggleLike(komunitasId) {
       try {
