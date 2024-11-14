@@ -1,61 +1,61 @@
 <template>
-    <div class="body pt-16 py-16">
-      <!-- Tombol Kembali -->
-      <div class="max-w-600px mx-auto mb-4 px-4 mt-20 ml-40">
-        <nuxt-link 
-          to="/komunitas" 
-          class="flex items-center text-teal-600 hover:text-teal-800 mb-4"
-        >
-          <i class="fas fa-arrow-left mr-2"></i> Kembali
+  <div class="body pt-16 py-16">
+    <!-- Header dengan foto profil dan status -->
+    <div class="chat-container mt-20">
+      <div class="chat-header flex items-center p-4 bg-white border-b">
+        <nuxt-link to="/konsultasi" class="text-teal-600 mr-4">
+          <i class="fas fa-arrow-left"></i>
         </nuxt-link>
-      </div>
-  
-      <div class="chat-container mt-20">
-        <!-- Header Chat -->
-        <div class="chat-header">
-          <h2>{{ konsultasi.judul }}</h2>
-          <p>{{ konsultasi.pakar?.name }}</p>
+        <img 
+          :src="getUserImage(konsultasi.pakar?.profile_photo)"
+          class="w-12 h-12 rounded-full mr-3"
+          alt="Pakar Avatar"
+        />
+        <div>
+          <h2 class="font-semibold">{{ konsultasi.pakar?.name }}</h2>
+          <span class="text-sm text-green-500">● Online</span>
         </div>
-  
-        <!-- Pesan Chat -->
-        <div 
-          class="chat-messages" 
-          ref="chatMessages"
-          v-if="konsultasi.pesans && konsultasi.pesans.length"
+      </div>
+
+      <!-- Chat Messages -->
+      <div 
+        class="chat-messages" 
+        ref="chatMessages"
+        v-if="konsultasi.pesans && konsultasi.pesans.length"
+      >
+        <div
+          v-for="pesan in konsultasi.pesans"
+          :key="pesan.id"
+          :class="[
+            'chat-message',
+            pesan.user_id === $auth.user.id ? 'sent' : 'received'
+          ]"
         >
-          <div
-            v-for="pesan in konsultasi.pesans"
-            :key="pesan.id"
-            :class="[
-              'chat-message',
-              pesan.user_id === $auth.user.id ? 'sent' : 'received'
-            ]"
-          >
-            <div class="message-content">
-              <div class="message-header">
-                <img 
-                  :src="getUserImage(pesan.user?.profile_photo)"
-                  class="avatar"
-                  alt="User Avatar"
-                />
-                <span class="username">{{ pesan.user?.name }}</span>
-              </div>
+          <div class="message-content">
+            <div class="flex items-start">
+              <img 
+                :src="getUserImage(pesan.user?.profile_photo)"
+                class="w-8 h-8 rounded-full mr-2"
+                alt="User Avatar"
+              />
               <div class="message-bubble">
                 <p v-if="pesan.isi">{{ pesan.isi }}</p>
                 <img
-                  v-if="pesan.gambar_url"
-                  :src="pesan.gambar_url"
+                  v-if="pesan.gambar"
+                  :src="`http://localhost:${imagePort}/storage/${pesan.gambar}`"
                   alt="Gambar Pesan"
                   class="message-image"
                 />
               </div>
-              <span class="message-time">{{ formatDate(pesan.created_at) }}</span>
             </div>
+            <span class="message-time text-xs text-gray-500 ml-10">{{ formatDate(pesan.created_at) }}</span>
           </div>
         </div>
-  
-        <!-- Input Chat -->
-        <div class="chat-input bg-white rounded-lg shadow-sm p-3 flex items-center gap-3">
+      </div>
+
+      <!-- Input Chat -->
+      <div class="chat-input-container">
+        <div class="chat-input bg-white p-3 flex items-center gap-3">
           <input
             type="file"
             ref="fileInput"
@@ -65,32 +65,30 @@
           />
           <button 
             @click="$refs.fileInput.click()" 
-            class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100"
+            class="text-gray-500 hover:text-gray-700"
           >
-            <img 
-              src="~/assets/images/link.png" 
-              alt="Upload Image"
-              class="w-10 h-6"
-            />
+            <i class="fas fa-paperclip"></i>
           </button>
           <input
             v-model="newMessage"
             type="text"
-            placeholder="Ketik pesan..."
-            class="flex-1 h-10 px-4 text-gray-700 bg-transparent outline-none"
+            placeholder="Tuliskan pesan anda"
+            class="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:border-teal-500"
           />
           <button 
             @click="sendMessage" 
-            class="px-6 py-2 bg-teal-800 text-white rounded-lg hover:bg-teal-700 transition-colors"
+            class="text-teal-500"
           >
-            Kirim
+            <i class="fas fa-paper-plane"></i>
           </button>
         </div>
       </div>
     </div>
-  </template>
+  </div>
+</template>
+
   
-  <script>
+<script>
   export default {
     data() {
       return {
@@ -100,7 +98,9 @@
           pesans: []
         },
         newMessage: '',
-        imagePort: 8000
+        imagePort: 8000,
+        selectedImage: null,
+        imagePreview: null
       }
     },
     async mounted() {
@@ -112,16 +112,17 @@
         try {
           const { data } = await this.$axios.get(`/konsultasi/${this.$route.params.id}`)
           this.konsultasi = data.data
-          this.$nextTick(() => {
-            this.scrollToBottom()
-          })
+          await this.$nextTick()
+          this.scrollToBottom()
         } catch (error) {
           console.error('Gagal mengambil data konsultasi:', error)
         }
       },
       scrollToBottom() {
         if (this.$refs.chatMessages) {
-          this.$refs.chatMessages.scrollTop = this.$refs.chatMessages.scrollHeight
+          setTimeout(() => {
+            this.$refs.chatMessages.scrollTop = this.$refs.chatMessages.scrollHeight
+          }, 100)
         }
       },
       getUserImage(profilePath) {
@@ -134,43 +135,86 @@
         return new Date(date).toLocaleTimeString('id-ID', options)
       },
       async sendMessage() {
-        if (!this.newMessage.trim()) return
+        if (!this.newMessage.trim() && !this.selectedImage) return
 
         try {
-          await this.$axios.post(`/konsultasi/${this.$route.params.id}/pesan`, {
-            isi: this.newMessage
-          })
-          this.newMessage = ''
-          await this.fetchKonsultasi()
-          this.$nextTick(() => {
-            this.scrollToBottom()
-          })
+          const formData = new FormData()
+          
+          if (this.newMessage.trim()) {
+            formData.append('isi', this.newMessage)
+          }
+          
+          if (this.selectedImage) {
+            formData.append('gambar', this.selectedImage)
+          }
+
+          const { data } = await this.$axios.post(
+            `/konsultasi/${this.$route.params.id}/pesan`, 
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }
+          )
+
+          if (data.success) {
+            this.newMessage = ''
+            this.cancelImage()
+            await this.fetchKonsultasi()
+            this.$nextTick(() => {
+              this.scrollToBottom()
+            })
+          } else {
+            throw new Error(data.message || 'Gagal mengirim pesan')
+          }
         } catch (error) {
           console.error('Gagal mengirim pesan:', error)
+          alert('Gagal mengirim pesan. Silakan coba lagi.')
         }
       },
-      async handleFileUpload(event) {
+      handleFileUpload(event) {
         const file = event.target.files[0]
         if (!file) return
 
-        const formData = new FormData()
-        formData.append('gambar', file)
+        // Validasi ukuran (max 2MB)
+        if (file.size > 2 * 1024 * 1024) {
+          alert('Ukuran gambar maksimal 2MB')
+          return
+        }
 
-        try {
-          await this.$axios.post(`/konsultasi/${this.$route.params.id}/pesan/gambar`, formData)
-          await this.fetchKonsultasi()
+        // Validasi tipe file
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif']
+        if (!allowedTypes.includes(file.type)) {
+          alert('Format gambar harus jpeg, png, jpg, atau gif')
+          return
+        }
+
+        this.selectedImage = file
+        this.imagePreview = URL.createObjectURL(file)
+      },
+      cancelImage() {
+        this.selectedImage = null
+        this.imagePreview = null
+        if (this.$refs.fileInput) {
+          this.$refs.fileInput.value = ''
+        }
+      }
+    },
+    watch: {
+      'konsultasi.pesans': {
+        handler() {
           this.$nextTick(() => {
             this.scrollToBottom()
           })
-        } catch (error) {
-          console.error('Gagal mengunggah gambar:', error)
-        }
+        },
+        deep: true
       }
     }
   }
   </script>
   
-  <style scoped>
+<style scoped>
   .body {
     background-image: url('~/assets/images/pattern.png'); /* Ganti dengan path pattern Anda */
     background-size: 1000px 1000px; /* Mengatur ukuran pattern menjadi kecil */
@@ -183,7 +227,8 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
-    max-width: 600px;
+    max-width: 70%;
+    width: 70%;
     margin: 0 auto;
     margin-top: 52px;
     border: 1px solid #ccc;
@@ -202,6 +247,7 @@
     flex: 1;
     overflow-y: auto;
     padding: 20px;
+    background-color: #e6eded;
   }
   
   .chat-message {
@@ -231,7 +277,7 @@
   }
   
   .received .message-content {
-    background-color: #f0f0f0;
+    background-color: white;
     color: black;
   }
   
@@ -317,6 +363,133 @@
   
   .upload-btn:hover, .send-btn:hover {
     opacity: 0.9;
+  }
+  
+  .preview-container {
+    position: relative;
+    display: inline-block;
+    margin: 8px;
+  }
+  
+  .preview-image {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 8px;
+  }
+  
+  .cancel-button {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  .cancel-button:hover {
+    background: #cc0000;
+  }
+  
+  .image-preview-container {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 1000;
+  }
+  
+  .image-preview-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .preview-image {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 4px;
+  }
+  
+  .cancel-preview-button {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ff4444;
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .cancel-preview-button:hover {
+    background: #cc0000;
+  }
+  
+  .chat-input-container {
+    position: relative;
+    padding: 8px;
+    background: white;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .image-preview-wrapper {
+    position: absolute;
+    bottom: 100%;
+    left: 8px;
+    background: white;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 8px;
+    z-index: 10;
+  }
+  
+  .preview-image {
+    max-width: 150px;
+    max-height: 100px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  .cancel-preview-button {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ff4444;
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .cancel-preview-button:hover {
+    background: #cc0000;
+  }
+  
+  .image-preview-container {
+    display: none;
   }
   </style>
   
