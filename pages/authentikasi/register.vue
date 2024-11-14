@@ -147,44 +147,49 @@
     },
     methods: {
   async handleRegister() {
-    try {
-      this.loading = true;
-      this.error = null;
-      
-      // Kirim request ke endpoint register Laravel
-      const response = await this.$axios.post('/api/register', {
-        name: this.form.name,
-        email: this.form.email,
-        password: this.form.password,
-        password_confirmation: this.form.password_confirmation,
-        no_hp: this.form.no_hp,
-        alamat: this.form.alamat
-      });
-
-      // Jika berhasil register, langsung login
-      if (response.data) {
-        const loginResponse = await this.$auth.loginWith('local', {
-          data: {
-            email: this.form.email,
-            password: this.form.password
-          }
-        });
-
-        // Simpan token ke localStorage
-        if (loginResponse?.data?.success) {
-          const token = loginResponse.data.token; // Pastikan token ada di respons
-          localStorage.setItem('token', token); // Simpan token
-          
-          // Redirect ke dashboard
-          this.$router.push('/dashboard');
-        }
-      }
-    } catch (err) {
-      this.error = err?.response?.data?.message || 'Terjadi kesalahan saat registrasi';
-    } finally {
-      this.loading = false;
+  try {
+    this.loading = true;
+    this.error = null;
+    
+    // Validasi password confirmation di frontend
+    if (this.form.password !== this.form.password_confirmation) {
+      this.error = 'Password confirmation does not match';
+      return;
     }
+    
+    // Kirim request ke endpoint register Laravel
+    const response = await this.$axios.post('/register', {
+      name: this.form.name,
+      email: this.form.email,
+      password: this.form.password,
+      password_confirmation: this.form.password_confirmation,
+      no_hp: this.form.no_hp,
+      alamat: this.form.alamat
+    });
+
+    if (response.data.success) {
+      // Simpan token
+      const token = response.data.data.token;
+      this.$auth.setToken('local', 'Bearer ' + token);
+      
+      // Set user data
+      await this.$auth.setUser(response.data.data.user);
+      
+      // Redirect ke dashboard
+      this.$router.push('/dashboard');
+    }
+  } catch (err) {
+    if (err.response?.data?.errors) {
+      // Tampilkan error validasi
+      const errors = err.response.data.errors;
+      this.error = Object.values(errors)[0][0];
+    } else {
+      this.error = err.response?.data?.message || 'Terjadi kesalahan saat registrasi';
+    }
+  } finally {
+    this.loading = false;
   }
+}
 }
   }
   </script>
