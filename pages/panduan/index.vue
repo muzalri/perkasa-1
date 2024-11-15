@@ -41,10 +41,9 @@
         <div 
           v-for="guide in guideBooks" 
           :key="guide.id" 
-          class="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
-          @click="goToDetail(guide.id)"
+          class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
         >
-          <NuxtLink :to="`/panduan/${guide.id}`">
+          <NuxtLink :to="`/panduan/${guide.id}`" class="block">
             <!-- Gambar Panduan -->
             <img 
               v-if="guide.image_path" 
@@ -55,18 +54,21 @@
             
             <!-- Konten Panduan -->
             <div class="p-6">
-              <h2 class="text-xl font-bold mb-2">{{ guide.title }}</h2>
+              <div class="flex justify-between items-start mb-2">
+                <h2 class="text-xl font-bold">{{ guide.title }}</h2>
+
+              </div>
               <p class="text-gray-600 mb-4 line-clamp-3">{{ guide.content }}</p>
               
               <!-- Footer dengan info penulis -->
               <div class="flex items-center space-x-4">
                 <img
-                  :src="getUserImage(guide.user?.profile_photo)"
+                  :src="getUserImage(guide.user_id?.profile_photo)"
                   alt="Author"
                   class="w-10 h-10 rounded-full"
                 />
                 <div>
-                  <p class="font-semibold">{{ guide.user?.name || 'Penulis' }}</p>
+                  <p class="font-semibold">{{ guide.user_id?.name || 'Penulis' }}</p>
                   <p class="text-sm text-gray-500">{{ formatDate(guide.created_at) }}</p>
                 </div>
               </div>

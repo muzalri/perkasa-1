@@ -13,48 +13,57 @@
         />
         <div>
           <h2 class="font-semibold">{{ konsultasi.pakar?.name }}</h2>
-          <span class="text-sm text-green-500">● Online</span>
         </div>
       </div>
 
       <!-- Chat Messages -->
       <div 
-        class="chat-messages" 
+        class="chat-messages flex-1" 
         ref="chatMessages"
-        v-if="konsultasi.pesans && konsultasi.pesans.length"
       >
-        <div
-          v-for="pesan in konsultasi.pesans"
-          :key="pesan.id"
-          :class="[
-            'chat-message',
-            pesan.user_id === $auth.user.id ? 'sent' : 'received'
-          ]"
-        >
-          <div class="message-content">
-            <div class="flex items-start">
-              <img 
-                :src="getUserImage(pesan.user?.profile_photo)"
-                class="w-8 h-8 rounded-full mr-2"
-                alt="User Avatar"
-              />
-              <div class="message-bubble">
-                <p v-if="pesan.isi">{{ pesan.isi }}</p>
-                <img
-                  v-if="pesan.gambar"
-                  :src="`http://localhost:${imagePort}/storage/${pesan.gambar}`"
-                  alt="Gambar Pesan"
-                  class="message-image"
+        <div v-if="konsultasi.pesans && konsultasi.pesans.length">
+          <div
+            v-for="pesan in konsultasi.pesans"
+            :key="pesan.id"
+            :class="[
+              'chat-message',
+              pesan.user_id === $auth.user.id ? 'sent' : 'received'
+            ]"
+          >
+            <div class="message-content">
+              <div class="flex items-start">
+                <img 
+                  :src="getUserImage(pesan.user?.profile_photo)"
+                  class="w-8 h-8 rounded-full mr-2"
+                  alt="User Avatar"
                 />
+                <div class="message-bubble">
+                  <p v-if="pesan.isi">{{ pesan.isi }}</p>
+                  <img
+                    v-if="pesan.gambar"
+                    :src="`http://localhost:${imagePort}/storage/${pesan.gambar}`"
+                    alt="Gambar Pesan"
+                    class="message-image"
+                  />
+                </div>
               </div>
+              <span class="message-time text-xs text-gray-500 ml-10">{{ formatDate(pesan.created_at) }}</span>
             </div>
-            <span class="message-time text-xs text-gray-500 ml-10">{{ formatDate(pesan.created_at) }}</span>
           </div>
         </div>
       </div>
 
       <!-- Input Chat -->
       <div class="chat-input-container">
+        <!-- Preview gambar -->
+        <div v-if="imagePreview" class="image-preview-wrapper">
+          <img :src="imagePreview" alt="Preview" class="preview-image" />
+          <button @click="cancelImage" class="cancel-preview-button">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <!-- Input chat yang sudah ada -->
         <div class="chat-input bg-white p-3 flex items-center gap-3">
           <input
             type="file"
@@ -226,7 +235,7 @@
   .chat-container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: calc(100vh - 150px);
     max-width: 70%;
     width: 70%;
     margin: 0 auto;
@@ -234,6 +243,7 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     overflow: hidden;
+    background-color: #e6eded;
   }
   
   .chat-header {
@@ -247,7 +257,9 @@
     flex: 1;
     overflow-y: auto;
     padding: 20px;
-    background-color: #e6eded;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
   }
   
   .chat-message {
@@ -410,14 +422,22 @@
   }
   
   .image-preview-wrapper {
-    position: relative;
-    display: inline-block;
+    position: absolute;
+    bottom: 100%;
+    left: 8px;
+    background: white;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 8px;
+    z-index: 10;
   }
   
   .preview-image {
-    max-width: 200px;
-    max-height: 150px;
-    border-radius: 4px;
+    max-width: 150px;
+    max-height: 100px;
+    border-radius: 8px;
+    object-fit: cover;
   }
   
   .cancel-preview-button {
@@ -446,6 +466,7 @@
     padding: 8px;
     background: white;
     border-top: 1px solid #e5e7eb;
+    margin-top: auto;
   }
   
   .image-preview-wrapper {

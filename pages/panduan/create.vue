@@ -97,7 +97,8 @@ export default {
         category_id: '',
         content: '',
         image: null,
-        video: null
+        video: null,
+        user_id: null
       },
       categories: [],
       imagePreview: null,
@@ -109,6 +110,7 @@ export default {
       this.$router.push('/panduan')
       return
     }
+    this.form.user_id = this.$auth.user.id
     await this.fetchCategories()
   },
   methods: {
@@ -157,6 +159,7 @@ export default {
         formData.append('title', this.form.title)
         formData.append('content', this.form.content)
         formData.append('category_id', this.form.category_id)
+        formData.append('user_id', this.form.user_id)
         if (this.form.image) formData.append('image', this.form.image)
         if (this.form.video) formData.append('video', this.form.video)
 
