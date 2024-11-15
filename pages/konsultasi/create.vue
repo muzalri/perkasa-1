@@ -1,57 +1,60 @@
 <template>
-  <div class="container mx-auto px-4 py-8 mt-20">
-    <h1 class="text-3xl font-bold text-teal-800 mb-6">Buat Konsultasi Baru</h1>
-    <form @submit.prevent="submitForm" class="space-y-4">
-      <!-- Judul -->
-      <div>
-        <label for="judul" class="block text-sm font-medium text-gray-700">Judul</label>
-        <input
-          type="text"
-          id="judul"
-          v-model="form.judul"
-          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-          required
-        />
-      </div>
+  <div class="body min-h-screen">
+    <div class="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg mt-16">
+      <h1 class="text-2xl font-bold mb-6 text-teal-800">Buat Konsultasi Baru</h1>
+    <!-- <div class="container mx-auto px-4 py-8 mt-20"> -->
+      <form @submit.prevent="submitForm" class="space-y-4">
+        <!-- Judul -->
+        <div class="mb-4">
+          <label for="judul" class="block text-sm font-medium text-gray-700">Judul</label>
+          <input
+            type="text"
+            id="judul"
+            v-model="form.judul"
+            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-teal-500"
+            required
+          />
+        </div>
 
-      <!-- Isi Konsultasi -->
-      <div>
-        <label for="deskripsi" class="block text-sm font-medium text-gray-700">Isi Konsultasi</label>
-        <textarea
-          id="deskripsi"
-          v-model="form.deskripsi"
-          rows="5"
-          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-          required
-        ></textarea>
-      </div>
+        <!-- Pilih Pakar -->
+        <div class="mb-4">
+          <label for="pakar_id" class="block text-sm font-medium text-gray-700">Pilih Pakar</label>
+          <select
+            id="pakar_id"
+            v-model="form.pakar_id"
+            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-teal-500"
+            required
+          >
+            <option value="" disabled>Pilih Pakar</option>
+            <option v-for="pakar in pakarList" :key="pakar.id" :value="pakar.id">
+              {{ pakar.name }}
+            </option>
+          </select>
+        </div>
 
-      <!-- Pilih Pakar -->
-      <div>
-        <label for="pakar_id" class="block text-sm font-medium text-gray-700">Pilih Pakar</label>
-        <select
-          id="pakar_id"
-          v-model="form.pakar_id"
-          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-          required
-        >
-          <option value="" disabled>Pilih Pakar</option>
-          <option v-for="pakar in pakarList" :key="pakar.id" :value="pakar.id">
-            {{ pakar.name }}
-          </option>
-        </select>
-      </div>
+        <!-- Isi Konsultasi -->
+        <div class="mb-4">
+          <label for="deskripsi" class="block text-sm font-medium text-gray-700">Isi Konsultasi</label>
+          <textarea
+            id="deskripsi"
+            v-model="form.deskripsi"
+            rows="5"
+            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-teal-500"
+            required
+          ></textarea>
+        </div>
 
-      <!-- Tombol Submit -->
-      <div class="flex justify-end">
-        <button
-          type="submit"
-          class="bg-gradient-to-t from-[#064e50] to-[#0A585B] text-white px-6 py-3 rounded-lg shadow-md hover:opacity-90 transition"
-        >
-          Publikasikan
-        </button>
-      </div>
-    </form>
+        <!-- Tombol Submit -->
+        <div class="flex justify-end">
+          <button
+            type="submit"
+            class="bg-gradient-to-t from-[#064e50] to-[#0A585B] text-white px-6 py-3 rounded-lg shadow-md hover:opacity-90 transition"
+          >
+            Publikasikan
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -110,7 +113,18 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  max-width: 75%;
+.body {
+  background-image: url('~/assets/images/pattern.png');
+  background-size: 1000px 1000px;
+  background-repeat: repeat;
+  min-height: 100vh;
+  padding: 40px 0;
+  background-position: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
 }
 </style>

@@ -29,7 +29,7 @@
           <nuxt-link
             v-if="$auth.user && $auth.user.role === 'pakar'"
             to="/panduan/create"
-            class="bg-gradient-to-t from-[#064e50] to-[#0A585B] text-white px-6 py-3 rounded-lg shadow-md hover:opacity-90 transition"
+            class="bg-gradient-to-t from-[#064e50] to-[#0A585B] text-white px-4 py-2 rounded-lg shadow-md hover:opacity-90 transition whitespace-nowrap"
           >
             Buat Panduan
           </nuxt-link>

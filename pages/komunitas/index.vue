@@ -180,7 +180,6 @@ export default {
   background-position: center;
   min-height: 100vh;
   width: 100%;
-  position: fixed;
   top: 0;
   left: 0;
   right: 0;

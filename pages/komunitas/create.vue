@@ -140,10 +140,27 @@
  
 <style scoped>
 .body {
-  background-image: url('~/assets/images/pattern.png'); /* Ganti dengan path pattern Anda */
-  background-size: 1000px 1000px; /* Mengatur ukuran pattern menjadi kecil */
-  background-repeat: repeat; /* Mengulang pattern */
-  background-position: center; /* Pusatkan pattern */
+  background-image: url('~/assets/images/pattern.png');
+  background-size: 1000px 1000px;
   padding-top: 40px;
+  background-repeat: repeat;
+  background-position: center;
+  min-height: 100vh;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+}
+
+.body:empty {
+  height: 100vh;
 }
 </style>
