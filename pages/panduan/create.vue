@@ -196,6 +196,7 @@ export default {
   background-image: url('~/assets/images/pattern.png');
   background-size: 1000px 1000px;
   background-repeat: repeat;
+  padding: 40px 0;
   background-position: center;
 }
 </style>
