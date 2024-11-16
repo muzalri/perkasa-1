@@ -87,11 +87,12 @@ export default {
 
   // Router configuration
   router: {
-    middleware: [],
+    middleware: ['admin'],
     extendRoutes(routes, resolve) {
-      routes.push({
-        path: '/',
-        redirect: '/authentikasi/login'
+      routes.forEach(route => {
+        if (route.path.startsWith('/admin')) {
+          route.middleware = ['admin']
+        }
       })
     }
   },
