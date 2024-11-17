@@ -41,7 +41,7 @@
                   <p v-if="pesan.isi">{{ pesan.isi }}</p>
                   <img
                     v-if="pesan.gambar"
-                    :src="`http://localhost:${imagePort}/storage/${pesan.gambar}`"
+                    :src="`http://localhost:${imagePort}/imagedb/konsultasi/${pesan.gambar}`"
                     alt="Gambar Pesan"
                     class="message-image"
                   />
@@ -136,7 +136,7 @@
       },
       getUserImage(profilePath) {
         return profilePath
-          ? `http://localhost:${this.imagePort}/storage/${profilePath}`
+          ? `http://localhost:${this.imagePort}/imagedb/profile_photo/${profilePath}`
           : require('~/assets/images/anwar.png')
       },
       formatDate(date) {

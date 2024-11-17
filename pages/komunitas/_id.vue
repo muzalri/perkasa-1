@@ -80,7 +80,9 @@
                 class="flex items-start space-x-3 mb-4"
               >
                 <img
-                  :src="getUserImage(komentar.user?.profile_photo)"
+                  :src="komentar.user?.profile_photo 
+                    ? `http://localhost:8000/imagedb/profile_photo/${komentar.user.profile_photo}`
+                    : require('~/assets/images/anwar.png')"
                   alt="Profile"
                   class="w-8 h-8 rounded-full"
                 />
@@ -160,11 +162,11 @@ export default {
   },
     
     getImageUrl(imagePath) {
-      return imagePath ? `http://localhost:8000/storage/${imagePath}` : '';
+      return imagePath ? `http://localhost:8000/imagedb/komunitas/${imagePath}` : '';
     },
     getUserImage(profilePath) {
       return profilePath 
-        ? `http://localhost:8000/storage/${profilePath}` 
+        ? `http://localhost:8000/imagedb/profile_photo/${profilePath}` 
         : require('~/assets/images/anwar.png');  // Menggunakan require untuk gambar dari assets
     },
     formatDate(date) {

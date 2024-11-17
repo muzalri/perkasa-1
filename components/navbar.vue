@@ -45,7 +45,7 @@
             <div class="relative">
               <img 
                 v-if="$auth.user?.profile_photo"
-                :src="`http://localhost:8000/storage/${$auth.user.profile_photo}`"
+                :src="`http://localhost:8000/imagedb/profile_photo/${$auth.user.profile_photo}`"
                 class="h-8 w-8 rounded-full object-cover"
                 alt="Profile Photo"
               />

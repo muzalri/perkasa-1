@@ -76,7 +76,7 @@ export default {
     },
     getUserImage(profilePath) {
       return profilePath
-        ? `http://localhost:${this.imagePort}/storage/${profilePath}`
+        ? `http://localhost:${this.imagePort}/imagedb/profile_photo/${profilePath}`
         : require('~/assets/images/anwar.png')
     },
     formatDate(date) {

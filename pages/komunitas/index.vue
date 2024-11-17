@@ -1,5 +1,5 @@
 <template>
-  <div class="body min-h-screen">
+  <div class="body">
     <div class="container mx-auto px-4 py-8 mt-16 w-8/12">
       <!-- Header Section -->
       <div class="flex flex-col md:flex-row items-center justify-between mb-6">
@@ -116,11 +116,11 @@ export default {
       }
     },
     getImageUrl(imagePath) {
-      return `http://localhost:${this.imagePort}/storage/${imagePath}`;
+      return `http://localhost:${this.imagePort}/imagedb/komunitas/${imagePath}`;
     },
     getUserImage(profilePath) {
       return profilePath
-        ? `http://localhost:8000/storage/${profilePath}`
+        ? `http://localhost:8000/imagedb/profile_photo/${profilePath}`
         : require('~/assets/images/anwar.png'); 
     },
     formatDate(date) {
@@ -180,19 +180,18 @@ export default {
   background-position: center;
   min-height: 100vh;
   width: 100%;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: -1;
+  overflow-y: auto;
 }
 
 .container {
   position: relative;
   z-index: 1;
-}
-
-.body:empty {
-  height: 100vh;
+  margin-bottom: 2rem;
 }
 </style>
