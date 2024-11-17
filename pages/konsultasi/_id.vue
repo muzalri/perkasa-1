@@ -129,9 +129,10 @@
       },
       scrollToBottom() {
         if (this.$refs.chatMessages) {
-          setTimeout(() => {
-            this.$refs.chatMessages.scrollTop = this.$refs.chatMessages.scrollHeight
-          }, 100)
+          this.$nextTick(() => {
+            const container = this.$refs.chatMessages;
+            container.scrollTop = container.scrollHeight;
+          });
         }
       },
       getUserImage(profilePath) {
@@ -244,6 +245,7 @@
     border-radius: 8px;
     overflow: hidden;
     background-color: #e6eded;
+    position: relative;
   }
   
   .chat-header {
@@ -260,18 +262,23 @@
     min-height: 200px;
     display: flex;
     flex-direction: column;
+    max-height: calc(100vh - 300px);
+    scroll-behavior: smooth;
   }
   
   .chat-message {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
+    width: 100%;
   }
   
   .message-content {
     max-width: 70%;
     padding: 10px;
     border-radius: 12px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .sent {
@@ -282,6 +289,7 @@
     background-color: #064e50;
     color: white;
     margin-left: auto;
+    max-width: 70%;
   }
   
   .received {
@@ -291,6 +299,7 @@
   .received .message-content {
     background-color: white;
     color: black;
+    max-width: 70%;
   }
   
   .message-header {
@@ -314,6 +323,8 @@
   .message-bubble {
     padding: 8px 12px;
     border-radius: 12px;
+    word-break: break-word;
+    max-width: 100%;
   }
   
   .message-time {
@@ -462,9 +473,10 @@
   }
   
   .chat-input-container {
-    position: relative;
-    padding: 8px;
+    position: sticky;
+    bottom: 0;
     background: white;
+    padding: 8px;
     border-top: 1px solid #e5e7eb;
     margin-top: auto;
   }

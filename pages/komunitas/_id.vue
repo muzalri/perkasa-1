@@ -26,7 +26,7 @@
           </div>
 
           <!-- Konten artikel -->
-          <p class="text-gray-700 text-lg mb-4">{{ komunitas.body }}</p>
+          <p class="text-gray-700 text-lg mb-4 article-content">{{ komunitas.body }}</p>
 
           <!-- Gambar artikel -->
           <img
@@ -77,7 +77,7 @@
               <div
                 v-for="komentar in komunitas.komentars"
                 :key="komentar.id"
-                class="flex items-start space-x-3 mb-4"
+                class="flex items-start space-x-3 mb-4 bg-gray-50 p-4 rounded-lg"
               >
                 <img
                   :src="komentar.user?.profile_photo 
@@ -86,10 +86,12 @@
                   alt="Profile"
                   class="w-8 h-8 rounded-full"
                 />
-                <div class="flex-1">
-                  <p class="font-semibold">{{ komentar.user?.name }}</p>
-                  <p class="text-gray-600">{{ komentar.body }}</p>
-                  <p class="text-xs text-gray-400 mt-1">{{ formatDate(komentar.created_at) }}</p>
+                <div class="flex-1 overflow-hidden">
+                  <p class="font-semibold text-teal-800">{{ komentar.user?.name }}</p>
+                  <div class="comment-content bg-white p-3 rounded-lg mt-1 shadow-sm">
+                    <p class="text-gray-700 break-words">{{ komentar.body }}</p>
+                  </div>
+                  <p class="text-xs text-gray-400 mt-2">{{ formatDate(komentar.created_at) }}</p>
                 </div>
               </div>
             </div>
@@ -194,11 +196,50 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.text-gray-600 {
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.text-gray-700 {
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.bg-white {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
 .body {
-  background-image: url('~/assets/images/pattern.png'); /* Ganti dengan path pattern Anda */
-  background-size: 1000px 1000px; /* Mengatur ukuran pattern menjadi kecil */
-  background-repeat: repeat; /* Mengulang pattern */
-  background-position: center; /* Pusatkan pattern */
+  background-image: url('~/assets/images/pattern.png');
+  background-size: 1000px 1000px;
+  background-repeat: repeat;
+  background-position: center;
+  padding: 20px;
+}
+
+/* Container untuk konten artikel */
+.article-content {
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.comment-content {
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.text-gray-700 {
+  max-width: 600px;
 }
 </style>

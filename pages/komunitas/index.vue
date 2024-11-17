@@ -181,7 +181,7 @@ export default {
   min-height: 100vh;
   width: 100%;
   position: absolute;
-  top: 0;
+  top: 10%;
   left: 0;
   right: 0;
   bottom: 0;
@@ -193,5 +193,19 @@ export default {
   position: relative;
   z-index: 1;
   margin-bottom: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.text-gray-700 {
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.bg-white {
+  max-width: 800px;
+  margin: 0 auto;
 }
 </style>
