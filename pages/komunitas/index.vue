@@ -108,7 +108,7 @@
   methods: {
     async fetchKomunitas() {
       try {
-        const { data } = await this.$axios.get('/komunitas');
+        const { data } = await this.$axios.get('/api/komunitas');
         this.komunitas = data.data.data || [];
       } catch (error) {
         console.error('Gagal mengambil komunitas:', error);

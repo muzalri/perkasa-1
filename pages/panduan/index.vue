@@ -47,7 +47,7 @@
             <!-- Gambar Panduan -->
             <img 
               v-if="guide.image_path" 
-              :src="`http://localhost:8000/storage/${guide.image_path}`"
+              :src="getImageUrl(guide.image_path)"
               class="w-full h-48 object-cover"
               alt="Panduan Image"
             />
@@ -85,12 +85,12 @@ export default {
   data() {
     return {
       guideBooks: [],
-      imagePort: 8000
+ 
     }
   },
   async mounted() {
     try {
-      const response = await this.$axios.get('/guide-books', {
+      const response = await this.$axios.get('/api/guide-books', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -104,9 +104,14 @@ export default {
     }
   },
   methods: {
+    getImageUrl(imagePath) {
+      return imagePath
+        ? `${this.$axios.defaults.baseURL}/storage/${imagePath}`
+        : require('~/assets/images/anwar.png');
+    },
     getUserImage(profilePath) {
       return profilePath
-        ? `http://localhost:${this.imagePort}/storage/${profilePath}`
+        ? `${this.$axios.defaults.baseURL}/storage/${profilePath}`
         : require('~/assets/images/anwar.png');
     },
     formatDate(date) {

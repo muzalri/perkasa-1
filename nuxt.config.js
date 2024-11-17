@@ -49,7 +49,13 @@ export default {
 
   // Axios configuration
   axios: {
-     baseURL: 'https://perkasa.miauwlan.com/'
+    baseURL: 'https://perkasa.miauwlan.com',
+    credentials: true,
+    headers: {
+      common: {
+        'Accept': 'application/json'
+      }
+    }
   },
 
   // Auth configuration
@@ -67,9 +73,9 @@ export default {
           autoFetch: true
         },
         endpoints: {
-          login: { url: '/login', method: 'post' },
-          logout: { url: '/logout', method: 'post' },
-          user: { url: '/profile', method: 'get' }
+          login: { url: '/api/login', method: 'post' },
+          logout: { url: '/api/logout', method: 'post' },
+          user: { url: '/api/profile', method: 'get' }
         }
       }
     },

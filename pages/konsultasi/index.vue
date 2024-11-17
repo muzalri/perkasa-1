@@ -68,7 +68,7 @@ export default {
     
     async fetchKonsultasi() {
       try {
-        const { data } = await this.$axios.get('/konsultasi');
+        const { data } = await this.$axios.get('/api/konsultasi');
         this.konsultasiList = data.data.data;
       } catch (error) {
         console.error('Gagal mengambil data:', error);
