@@ -47,7 +47,7 @@
             <!-- Gambar Panduan -->
             <img 
               v-if="guide.image_path" 
-              :src="`http://localhost:8000/storage/${guide.image_path}`"
+              :src="`http://localhost:8000/imagedb/guide_book/images/${guide.image_path}`"
               class="w-full h-48 object-cover"
               alt="Panduan Image"
             />
