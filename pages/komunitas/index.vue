@@ -99,7 +99,7 @@
   data() {
     return {
       komunitas: [], // Data komunitas dari API
-      imagePort: 8000,
+
     };
   },
   async created() {
@@ -121,8 +121,6 @@
     getUserImage(profilePath) {
       return profilePath
         ? `${this.$axios.defaults.baseURL}/storage/${profilePath}`
-        : '/default-avatar.png';
-        ? `http://localhost:8000/storage/${profilePath}`
         : require('~/assets/images/anwar.png'); 
     },
     formatDate(date) {
