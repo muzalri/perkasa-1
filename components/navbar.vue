@@ -45,7 +45,7 @@
             <div class="relative">
               <img 
                 v-if="$auth.user?.profile_photo"
-                :src="`http://localhost:8000/storage/${$auth.user.profile_photo}`"
+                :src="getUserImage($auth.user.profile_photo)"
                 class="h-8 w-8 rounded-full object-cover"
                 alt="Profile Photo"
               />
@@ -87,13 +87,19 @@
 export default {
   data() {
     return {
-      isHidden: false, // Atur default untuk tidak tersembunyi
+      isHidden: false,
+ 
     };
   },
   methods: {
     toggleNavbar() {
-      this.isHidden = !this.isHidden; // Metode untuk toggle navbar
+      this.isHidden = !this.isHidden;
     },
-  },
+    getUserImage(profilePath) {
+      return profilePath
+        ? `http://localhost:${this.imagePort}/storage/${profilePath}`
+        : require('~/assets/images/anwar.png')
+    }
+  }
 };
 </script>

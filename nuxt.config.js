@@ -49,7 +49,7 @@ export default {
 
   // Axios configuration
   axios: {
-     baseURL: 'https://perkasa.miauwlan.com/api/'
+     baseURL: 'https://perkasa.miauwlan.com/'
   },
 
   // Auth configuration
@@ -87,11 +87,13 @@ export default {
 
   // Router configuration
   router: {
-    middleware: ['admin'],
+    middleware: ['auth-check'],
     extendRoutes(routes, resolve) {
       routes.forEach(route => {
         if (route.path.startsWith('/admin')) {
           route.middleware = ['admin']
+        } else if (!route.path.startsWith('/authentikasi')) {
+          route.middleware = ['user']
         }
       })
     }

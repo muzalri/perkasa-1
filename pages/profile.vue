@@ -115,7 +115,7 @@ export default {
   methods: {
     getUserImage(profilePath) {
       return profilePath
-        ? `http://localhost:${this.imagePort}/storage/${profilePath}`
+        ? this.$axios.get(`/storage/${profilePath}`)
         : require('~/assets/images/anwar.png')
     },
     async handlePhotoUpload(event) {
@@ -126,7 +126,7 @@ export default {
       formData.append('profile_photo', file)
 
       try {
-        await this.$axios.post('/profile/photo', formData, {
+        await this.$axios.post('/api/profile/photo', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }

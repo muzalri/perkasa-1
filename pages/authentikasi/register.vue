@@ -158,7 +158,7 @@
           }
           
           // Kirim request ke endpoint register Laravel
-          const response = await this.$axios.post('/register', {
+          const response = await this.$axios.post('/api/register', {
             name: this.form.name,
             email: this.form.email,
             password: this.form.password,

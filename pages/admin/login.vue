@@ -63,7 +63,7 @@ export default {
         this.loading = true
         this.error = null
         
-        const response = await this.$axios.post('/admin/login', this.form)
+        const response = await this.$axios.post('/api/admin/login', this.form)
 
         if (response.data.success) {
           const token = response.data.token

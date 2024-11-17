@@ -1,8 +1,9 @@
-export default function ({ redirect }) {
-  if (process.client) {
-    const adminToken = localStorage.getItem('admin_token')
-    if (!adminToken) {
-      return redirect('/admin/login')
-    }
+export default function ({ $auth, redirect }) {
+  if (!$auth.loggedIn) {
+    return redirect('/admin/login')
+  }
+
+  if (!$auth.user?.is_admin) {
+    return redirect('/dashboard')
   }
 } 
