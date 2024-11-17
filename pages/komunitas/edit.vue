@@ -71,3 +71,15 @@ export default {
   },
 };
 </script> 
+<style scoped>
+
+body {
+  background-image: url('~/assets/images/pattern.png');
+  background-size: cover; /* Ensures the image covers the entire background */
+  background-position: center; /* Centers the image */
+  background-repeat: repeat; /* Prevents the image from repeating */
+  min-height: 100vh; /* Ensures the body takes up the full viewport height */
+  margin: 0; /* Removes default margin */
+}
+
+</style>

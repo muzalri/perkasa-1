@@ -123,14 +123,18 @@
               remember: this.form.remember
             }
           });
-              if (response?.data?.success) {
-            const token = response.data.token; // Pastikan token ada di respons
-            localStorage.setItem('token', token); // Simpan token
-            this.$router.push('/dashboard');
-          }
 
           if (response?.data?.success) {
-            this.$router.push('/dashboard')
+            const { token, is_admin } = response.data.data;
+            localStorage.setItem('token', token);
+            
+            // Redirect berdasarkan is_admin
+            if (is_admin) {
+              localStorage.setItem('admin_token', token);
+              this.$router.push('/admin/dashboard');
+            } else {
+              this.$router.push('/dashboard');
+            }
           }
 
         } catch (err) {

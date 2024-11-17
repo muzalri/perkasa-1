@@ -146,45 +146,57 @@
       }
     },
     methods: {
-  async handleRegister() {
-    try {
-      this.loading = true;
-      this.error = null;
-      
-      // Kirim request ke endpoint register Laravel
-      const response = await this.$axios.post('/api/register', {
-        name: this.form.name,
-        email: this.form.email,
-        password: this.form.password,
-        password_confirmation: this.form.password_confirmation,
-        no_hp: this.form.no_hp,
-        alamat: this.form.alamat
-      });
-
-      // Jika berhasil register, langsung login
-      if (response.data) {
-        const loginResponse = await this.$auth.loginWith('local', {
-          data: {
-            email: this.form.email,
-            password: this.form.password
-          }
-        });
-
-        // Simpan token ke localStorage
-        if (loginResponse?.data?.success) {
-          const token = loginResponse.data.token; // Pastikan token ada di respons
-          localStorage.setItem('token', token); // Simpan token
+      async handleRegister() {
+        try {
+          this.loading = true
+          this.error = null
           
-          // Redirect ke dashboard
-          this.$router.push('/dashboard');
+          // Validasi password confirmation di frontend
+          if (this.form.password !== this.form.password_confirmation) {
+            this.error = 'Password confirmation does not match'
+            return
+          }
+          
+          // Kirim request ke endpoint register Laravel
+          const response = await this.$axios.post('/register', {
+            name: this.form.name,
+            email: this.form.email,
+            password: this.form.password,
+            password_confirmation: this.form.password_confirmation,
+            no_hp: this.form.no_hp,
+            alamat: this.form.alamat
+          })
+
+          // Cek response success
+          if (response.data.success) {
+            try {
+              // Login setelah registrasi berhasil
+              await this.$auth.loginWith('local', {
+                data: {
+                  email: this.form.email,
+                  password: this.form.password
+                }
+              })
+              
+              // Redirect ke dashboard setelah login berhasil
+              this.$router.push('/dashboard')
+            } catch (loginError) {
+              console.error('Gagal login setelah registrasi:', loginError)
+              this.error = 'Registrasi berhasil tapi gagal login otomatis. Silakan login manual.'
+              this.$router.push('/authentikasi/login')
+            }
+          }
+        } catch (err) {
+          if (err.response?.data?.errors) {
+            const errors = err.response.data.errors
+            this.error = Object.values(errors)[0][0]
+          } else {
+            this.error = err.response?.data?.message || 'Terjadi kesalahan saat registrasi'
+          }
+        } finally {
+          this.loading = false
         }
       }
-    } catch (err) {
-      this.error = err?.response?.data?.message || 'Terjadi kesalahan saat registrasi';
-    } finally {
-      this.loading = false;
     }
-  }
-}
   }
   </script>
