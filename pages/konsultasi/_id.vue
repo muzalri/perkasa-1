@@ -2,18 +2,32 @@
   <div class="body pt-16 py-16">
     <!-- Header dengan foto profil dan status -->
     <div class="chat-container mt-20">
-      <div class="chat-header flex items-center p-4 bg-white border-b">
-        <nuxt-link to="/konsultasi" class="text-teal-600 mr-4">
-          <i class="fas fa-arrow-left"></i>
-        </nuxt-link>
-        <img 
-          :src="getUserImage(konsultasi.pakar?.profile_photo)"
-          class="w-12 h-12 rounded-full mr-3"
-          alt="Pakar Avatar"
-        />
-        <div>
-          <h2 class="font-semibold">{{ konsultasi.pakar?.name }}</h2>
+      <div class="chat-header flex items-center justify-between p-4 bg-white border-b">
+        <div class="flex items-center">
+          <nuxt-link to="/konsultasi" class="text-teal-600 mr-4">
+            <i class="fas fa-arrow-left"></i>
+          </nuxt-link>
+          <img 
+            :src="getUserImage(konsultasi.pakar?.profile_photo)"
+            class="w-12 h-12 rounded-full mr-3"
+            alt="Pakar Avatar"
+          />
+          <div>
+            <h2 class="font-semibold">{{ konsultasi.pakar?.name }}</h2>
+          </div>
         </div>
+        
+        <!-- Tambahkan tombol hapus -->
+        <button 
+          v-if="$auth.user && (
+            ($auth.user.role === 'pakar' && konsultasi.pakar_id === $auth.user.id) ||
+            ($auth.user.role !== 'pakar' && konsultasi.user_id === $auth.user.id)
+          )"
+          @click="confirmDelete"
+          class="text-red-600 hover:text-red-800"
+        >
+          <i class="fas fa-trash"></i>
+        </button>
       </div>
 
       <!-- Chat Messages -->
@@ -208,6 +222,21 @@
         this.imagePreview = null
         if (this.$refs.fileInput) {
           this.$refs.fileInput.value = ''
+        }
+      },
+      async confirmDelete() {
+        if (confirm('Apakah Anda yakin ingin menghapus konsultasi ini?')) {
+          try {
+            const response = await this.$axios.delete(`/konsultasi/${this.$route.params.id}`);
+            
+            if (response.data.success) {
+              alert('Konsultasi berhasil dihapus');
+              this.$router.push('/konsultasi');
+            }
+          } catch (error) {
+            console.error('Gagal menghapus konsultasi:', error);
+            alert(error.response?.data?.message || 'Gagal menghapus konsultasi');
+          }
         }
       }
     },
@@ -523,6 +552,16 @@
   
   .image-preview-container {
     display: none;
+  }
+  
+  .chat-header button {
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+  
+  .chat-header button:hover {
+    background-color: rgba(239, 68, 68, 0.1);
   }
   </style>
   

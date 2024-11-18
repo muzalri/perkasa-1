@@ -92,8 +92,8 @@ export default {
     async submitForm() {
       const formData = new FormData();
       formData.append('judul', this.form.judul);
-      formData.append('deskripsi', this.form.deskripsi);
       formData.append('pakar_id', this.form.pakar_id);
+      formData.append('isi', this.form.deskripsi);
 
       try {
         const { data } = await this.$axios.post('/konsultasi', formData, {
