@@ -219,7 +219,7 @@ export default {
         {
           name: 'Cahya',
           position: 'Ketua',
-          image: require('@/assets/images/anwar.png'),
+          image: require('@/assets/images/cahya.jpeg'),
           socials: [
             { platform: 'GitHub', link: 'https://github.com/cahyailhamketua', icon: 'fab fa-github' },
             { platform: 'Instagram', link: 'https://instagram.com/chyilhm', icon: 'fab fa-instagram' },
