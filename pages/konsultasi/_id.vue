@@ -8,21 +8,18 @@
             <i class="fas fa-arrow-left"></i>
           </nuxt-link>
           <img 
-            :src="getUserImage(konsultasi.pakar?.profile_photo)"
+            :src="getUserImage($auth.user.role === 'pakar' ? konsultasi.user?.profile_photo : konsultasi.pakar?.profile_photo)"
             class="w-12 h-12 rounded-full mr-3"
-            alt="Pakar Avatar"
+            alt="Profile Avatar"
           />
           <div>
-            <h2 class="font-semibold">{{ konsultasi.pakar?.name }}</h2>
+            <h2 class="font-semibold">{{ $auth.user.role === 'pakar' ? konsultasi.user?.name : konsultasi.pakar?.name }}</h2>
           </div>
         </div>
         
         <!-- Tambahkan tombol hapus -->
         <button 
-          v-if="$auth.user && (
-            ($auth.user.role === 'pakar' && konsultasi.pakar_id === $auth.user.id) ||
-            ($auth.user.role !== 'pakar' && konsultasi.user_id === $auth.user.id)
-          )"
+          v-if="showDeleteButton"
           @click="confirmDelete"
           class="text-red-600 hover:text-red-800"
         >
@@ -238,7 +235,7 @@
             const response = await this.$axios.delete(`/konsultasi/${this.$route.params.id}`);
             
             if (response.data.success) {
-              alert('Konsultasi berhasil dihapus');
+              alert(response.data.message);
               this.$router.push('/konsultasi');
             }
           } catch (error) {
@@ -256,6 +253,19 @@
           })
         },
         deep: true
+      }
+    },
+    computed: {
+      showDeleteButton() {
+        if (!this.$auth.user) return false;
+        
+        if (this.$auth.user.role === 'pakar') {
+          return Number(this.konsultasi.pakar_id) === Number(this.$auth.user.id) && 
+                 this.konsultasi.status_pakar !== 'deleted';
+        } else {
+          return Number(this.konsultasi.user_id) === Number(this.$auth.user.id) && 
+                 this.konsultasi.status_user !== 'deleted';
+        }
       }
     }
   }

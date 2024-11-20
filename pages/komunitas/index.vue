@@ -4,27 +4,6 @@
       <!-- Header Section -->
       <div class="flex flex-col md:flex-row items-center justify-between mb-6">
         <h1 class="text-3xl font-bold text-teal-800 mb-4 md:mb-0">Komunitas</h1>
-        <div class="relative w-full max-w-md mb-4 md:mb-0">
-          <input
-            type="text"
-            placeholder="Cari di komunitas..."
-            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:border-teal-500"
-          />
-          <svg
-            class="w-5 h-5 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M8 16l-4.5 4.5M21 21l-4.5-4.5M10 10a6 6 0 100-12 6 6 0 000 12z"
-            />
-          </svg>
-        </div>
         <nuxt-link
           to="/komunitas/create"
           class="bg-gradient-to-t from-[#064e50] to-[#0A585B] text-white px-6 py-3 rounded-lg shadow-md hover:opacity-90 transition"
@@ -33,12 +12,51 @@
         </nuxt-link>
       </div>
 
-      <!-- Konten Artikel -->
-      <div v-if="komunitas.length" class="space-y-6">
+      <!-- Filter Categories -->
+      <div class="flex gap-4 mb-8 overflow-x-auto pb-2 whitespace-nowrap categories-container">
+        <button 
+          @click="selectedCategory = null"
+          :class="[
+            'px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105 flex-shrink-0 flex items-center justify-center',
+            !selectedCategory ? 'bg-teal-600 text-white h-10' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 h-10'
+          ]"
+        >
+          ALL
+        </button>
+        <button 
+          v-for="category in categories"
+          :key="category.id"
+          @click="selectedCategory = category.id"
+          :class="[
+            'px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105 flex-shrink-0 flex items-center justify-center',
+            selectedCategory === category.id ? 'bg-teal-600 text-white h-10' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 h-10'
+          ]"
+        >
+          {{ category.name }}
+        </button>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="relative w-full max-w-md mb-6">
+        <input
+          v-model="searchQuery"
+          type="text"
+          placeholder="Cari di komunitas..."
+          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:border-teal-500"
+        />
+        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+
+      <!-- Konten Artikel dengan Transisi -->
+      <transition-group 
+        name="artikel-list" 
+        tag="div" 
+        class="space-y-6"
+      >
         <div
-          v-for="komunitasItem in komunitas"
+          v-for="komunitasItem in filteredKomunitas"
           :key="komunitasItem.id"
-          class="bg-white shadow-md rounded-lg overflow-hidden cursor-pointer"
+          class="bg-white shadow-md rounded-lg overflow-hidden cursor-pointer transform transition duration-300 hover:scale-[1.02]"
           @click="goToDetail(komunitasItem.id)"
         >
           <!-- Header Artikel -->
@@ -87,28 +105,55 @@
             <span class="text-sm text-gray-500">{{ komunitasItem.category.name }}</span>
           </div>
         </div>
-      </div>
+      </transition-group>
 
       <!-- Jika Tidak Ada Artikel -->
-      <p v-else class="text-center text-gray-500 mt-10">Belum ada artikel yang dipublikasikan.</p>
+      <p v-if="filteredKomunitas.length === 0" class="text-center text-gray-500 mt-10">
+        Tidak ada artikel yang sesuai dengan filter.
+      </p>
     </div>
   </div>
 </template>
+
 <script>
- export default {
+export default {
   data() {
     return {
-      komunitas: [], // Data komunitas dari API
- 
-    };
+      komunitas: [],
+      categories: [],
+      selectedCategory: null,
+      searchQuery: ''
+    }
   },
   async created() {
-    await this.fetchKomunitas();
+    await Promise.all([
+      this.fetchKomunitas(),
+      this.fetchCategories()
+    ])
+  },
+  computed: {
+    filteredKomunitas() {
+      return this.komunitas.filter(item => {
+        const matchesCategory = !this.selectedCategory || item.category.id === this.selectedCategory
+        const matchesSearch = !this.searchQuery || 
+          item.body.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          item.user.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+        return matchesCategory && matchesSearch
+      })
+    }
   },
   methods: {
+    async fetchCategories() {
+      try {
+        const { data } = await this.$axios.get('/komunitas/categories')
+        this.categories = data.data
+      } catch (error) {
+        console.error('Gagal mengambil kategori:', error)
+      }
+    },
     async fetchKomunitas() {
       try {
-        const { data } = await this.$axios.get('/api/komunitas');
+        const { data } = await this.$axios.get('/komunitas');
         this.komunitas = data.data.data || [];
       } catch (error) {
         console.error('Gagal mengambil komunitas:', error);
@@ -169,10 +214,25 @@
       if (!komunitasItem.likes || !this.$auth.user) return false;
       return komunitasItem.likes.some(like => like.user_id === this.$auth.user.id);
     },
-  },
-};
+  }
+}
 </script>
+
 <style scoped>
+/* Animasi untuk artikel list */
+.artikel-list-enter-active,
+.artikel-list-leave-active {
+  transition: all 0.5s ease;
+}
+.artikel-list-enter-from,
+.artikel-list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.artikel-list-move {
+  transition: transform 0.5s ease;
+}
+
 .body {
   background-image: url('~/assets/images/pattern.png');
   background-size: 1000px 1000px;
@@ -180,8 +240,8 @@
   background-position: center;
   min-height: 100vh;
   width: 100%;
-  position: absolute;
-  top: 10%;
+  position: fixed;
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
@@ -192,6 +252,7 @@
 .container {
   position: relative;
   z-index: 1;
+  padding-top: 100px;
   margin-bottom: 2rem;
   max-width: 1000px;
   margin: 0 auto;
@@ -207,6 +268,48 @@
 .bg-white {
   max-width: 800px;
   margin: 0 auto;
+}
+
+.overflow-x-auto {
+  scrollbar-width: thin;
+  scrollbar-color: #0A585B #f3f4f6;
+}
+
+.overflow-x-auto::-webkit-scrollbar {
+  height: 6px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 3px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #0A585B;
+  border-radius: 3px;
+}
+
+.categories-container {
+  height: 40px;
+  align-items: center;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 1rem;
+}
+
+.categories-container::-webkit-scrollbar {
+  display: none;
+}
+
+.categories-container button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 </style>
 

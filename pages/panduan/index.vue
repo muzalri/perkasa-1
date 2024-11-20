@@ -90,7 +90,7 @@ export default {
   },
   async mounted() {
     try {
-      const response = await this.$axios.get('/api/guide-books', {
+      const response = await this.$axios.get('/guide-books', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

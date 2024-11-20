@@ -53,7 +53,6 @@ export default {
   data() {
     return {
       konsultasiList: [], // Data konsultasi dari API
-      imagePort: 8000,
     };
   },
   async created() {
@@ -65,7 +64,7 @@ export default {
     },
     async fetchKonsultasi() {
       try {
-        const { data } = await this.$axios.get('/api/konsultasi');
+        const { data } = await this.$axios.get('/konsultasi');
         this.konsultasiList = data.data.data;
       } catch (error) {
         console.error('Gagal mengambil data:', error);

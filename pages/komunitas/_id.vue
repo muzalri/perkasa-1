@@ -181,19 +181,16 @@ export default {
     async destroyKomunitas() {
       if (confirm('Apakah Anda yakin ingin menghapus postingan ini?')) {
         try {
-          await this.$axios.delete(
-            `https://perkasa.miauwlan.com/api/komunitas/${this.komunitas.id}`,
-            {
-              headers: {
-                'Authorization': `Bearer ${this.$auth.strategy.token.get()}`,
-                'Accept': 'application/json'
-              }
+          await this.$axios.delete(`/komunitas/${this.komunitas.id}`, {
+            headers: {
+              'Authorization': `Bearer ${this.$auth.strategy.token.get()}`,
+              'Accept': 'application/json'
             }
-          );
-          
+          });
           this.$router.push('/komunitas');
         } catch (error) {
-          console.error('Gagal menghapus postingan:', error);
+          console.error('Error detail:', error.response);
+          alert(error.response?.data?.message || 'Gagal menghapus postingan');
         }
       }
     }
