@@ -24,12 +24,12 @@
         <div class="p-6">
           <div class="flex items-center space-x-4 mb-4">
             <img
-              :src="getUserImage(konsultasi.user.profile_photo)"
+              :src="getUserImage(getDisplayedUser(konsultasi).profile_photo)"
               alt="Profile"
               class="w-12 h-12 rounded-full"
             />
             <div>
-              <h2 class="text-lg font-semibold text-teal-800">{{ konsultasi.user.name }}</h2>
+              <h2 class="text-lg font-semibold text-teal-800">{{ getDisplayedUser(konsultasi).name }}</h2>
               <p class="text-sm text-gray-500">{{ formatDate(konsultasi.created_at) }}</p>
             </div>
           </div>
@@ -60,12 +60,9 @@ export default {
     await this.fetchKonsultasi();
   },
   methods: {
+    goToDetail(id) {
+      this.$router.push(`/konsultasi/${id}`);
     },
-    methods: {
-      goToDetail(id) {
-        this.$router.push(`/konsultasi/${id}`);
-      },
-    
     async fetchKonsultasi() {
       try {
         const { data } = await this.$axios.get('/api/konsultasi');
@@ -76,12 +73,15 @@ export default {
     },
     getUserImage(profilePath) {
       return profilePath
-        ? `http://localhost:${this.imagePort}/storage/${profilePath}`
+        ? `https://perkasa.miauwlan.com/imagedb/profile_photo/${profilePath}`
         : require('~/assets/images/anwar.png')
     },
     formatDate(date) {
       const options = { year: 'numeric', month: 'short', day: 'numeric' };
       return new Date(date).toLocaleDateString('id-ID', options);
+    },
+    getDisplayedUser(konsultasi) {
+      return this.$auth.user.role === 'pakar' ? konsultasi.user : konsultasi.pakar;
     },
   },
 };

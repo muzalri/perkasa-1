@@ -1,6 +1,6 @@
 <template>
-    <div class="body">
-    <div class="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg mt-16">
+    <div class="body relative min-h-screen">
+    <div class="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg mt-16 mb-8">
         <h1 class="text-2xl font-bold mb-6 text-teal-800">Buat Artikel Baru</h1>
         <form @submit.prevent="submitForm">
         <!-- Judul -->
@@ -142,25 +142,21 @@
 .body {
   background-image: url('~/assets/images/pattern.png');
   background-size: 1000px 1000px;
-  padding-top: 40px;
   background-repeat: repeat;
   background-position: center;
   min-height: 100vh;
   width: 100%;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: -1;
+  overflow-y: auto;
 }
 
 .container {
   position: relative;
   z-index: 1;
-}
-
-.body:empty {
-  height: 100vh;
 }
 </style>

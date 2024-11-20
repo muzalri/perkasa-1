@@ -2,18 +2,32 @@
   <div class="body pt-16 py-16">
     <!-- Header dengan foto profil dan status -->
     <div class="chat-container mt-20">
-      <div class="chat-header flex items-center p-4 bg-white border-b">
-        <nuxt-link to="/konsultasi" class="text-teal-600 mr-4">
-          <i class="fas fa-arrow-left"></i>
-        </nuxt-link>
-        <img 
-          :src="getUserImage(konsultasi.pakar?.profile_photo)"
-          class="w-12 h-12 rounded-full mr-3"
-          alt="Pakar Avatar"
-        />
-        <div>
-          <h2 class="font-semibold">{{ konsultasi.pakar?.name }}</h2>
+      <div class="chat-header flex items-center justify-between p-4 bg-white border-b">
+        <div class="flex items-center">
+          <nuxt-link to="/konsultasi" class="text-teal-600 mr-4">
+            <i class="fas fa-arrow-left"></i>
+          </nuxt-link>
+          <img 
+            :src="getUserImage(konsultasi.pakar?.profile_photo)"
+            class="w-12 h-12 rounded-full mr-3"
+            alt="Pakar Avatar"
+          />
+          <div>
+            <h2 class="font-semibold">{{ konsultasi.pakar?.name }}</h2>
+          </div>
         </div>
+        
+        <!-- Tambahkan tombol hapus -->
+        <button 
+          v-if="$auth.user && (
+            ($auth.user.role === 'pakar' && konsultasi.pakar_id === $auth.user.id) ||
+            ($auth.user.role !== 'pakar' && konsultasi.user_id === $auth.user.id)
+          )"
+          @click="confirmDelete"
+          class="text-red-600 hover:text-red-800"
+        >
+          <i class="fas fa-trash"></i>
+        </button>
       </div>
 
       <!-- Chat Messages -->
@@ -27,27 +41,33 @@
             :key="pesan.id"
             :class="[
               'chat-message',
-              pesan.user_id === $auth.user.id ? 'sent' : 'received'
+              Number(pesan.user_id) === Number($auth.user.id) ? 'sent' : 'received'
             ]"
           >
             <div class="message-content">
-              <div class="flex items-start">
+              <div class="flex items-start" :class="{ 'flex-row-reverse': Number(pesan.user_id) === Number($auth.user.id) }">
                 <img 
                   :src="getUserImage(pesan.user?.profile_photo)"
-                  class="w-8 h-8 rounded-full mr-2"
+                  class="w-8 h-8 rounded-full"
+                  :class="{ 'ml-2': Number(pesan.user_id) === Number($auth.user.id), 'mr-2': Number(pesan.user_id) !== Number($auth.user.id) }"
                   alt="User Avatar"
                 />
                 <div class="message-bubble">
                   <p v-if="pesan.isi">{{ pesan.isi }}</p>
                   <img
                     v-if="pesan.gambar"
-                    :src="`http://localhost:${imagePort}/storage/${pesan.gambar}`"
+                    :src="`https://perkasa.miauwlan.com/imagedb/konsultasi/${pesan.gambar}`"
                     alt="Gambar Pesan"
                     class="message-image"
                   />
                 </div>
               </div>
-              <span class="message-time text-xs text-gray-500 ml-10">{{ formatDate(pesan.created_at) }}</span>
+              <span 
+                class="message-time text-xs text-gray-500" 
+                :class="{ 'text-right mr-10': Number(pesan.user_id) === Number($auth.user.id), 'ml-10': Number(pesan.user_id) !== Number($auth.user.id) }"
+              >
+                {{ formatDate(pesan.created_at) }}
+              </span>
             </div>
           </div>
         </div>
@@ -107,7 +127,7 @@
           pesans: []
         },
         newMessage: '',
-        imagePort: 8000,
+
         selectedImage: null,
         imagePreview: null
       }
@@ -115,6 +135,8 @@
     async mounted() {
       await this.fetchKonsultasi()
       this.scrollToBottom()
+      console.log('Auth User ID:', this.$auth.user.id)
+      console.log('Auth User:', this.$auth.user)
     },
     methods: {
       async fetchKonsultasi() {
@@ -129,14 +151,15 @@
       },
       scrollToBottom() {
         if (this.$refs.chatMessages) {
-          setTimeout(() => {
-            this.$refs.chatMessages.scrollTop = this.$refs.chatMessages.scrollHeight
-          }, 100)
+          this.$nextTick(() => {
+            const container = this.$refs.chatMessages;
+            container.scrollTop = container.scrollHeight;
+          });
         }
       },
       getUserImage(profilePath) {
         return profilePath
-          ? `http://localhost:${this.imagePort}/storage/${profilePath}`
+          ? `https://perkasa.miauwlan.com/imagedb/profile_photo/${profilePath}`
           : require('~/assets/images/anwar.png')
       },
       formatDate(date) {
@@ -208,6 +231,21 @@
         if (this.$refs.fileInput) {
           this.$refs.fileInput.value = ''
         }
+      },
+      async confirmDelete() {
+        if (confirm('Apakah Anda yakin ingin menghapus konsultasi ini?')) {
+          try {
+            const response = await this.$axios.delete(`/konsultasi/${this.$route.params.id}`);
+            
+            if (response.data.success) {
+              alert('Konsultasi berhasil dihapus');
+              this.$router.push('/konsultasi');
+            }
+          } catch (error) {
+            console.error('Gagal menghapus konsultasi:', error);
+            alert(error.response?.data?.message || 'Gagal menghapus konsultasi');
+          }
+        }
       }
     },
     watch: {
@@ -244,6 +282,7 @@
     border-radius: 8px;
     overflow: hidden;
     background-color: #e6eded;
+    position: relative;
   }
   
   .chat-header {
@@ -260,18 +299,23 @@
     min-height: 200px;
     display: flex;
     flex-direction: column;
+    max-height: calc(100vh - 300px);
+    scroll-behavior: smooth;
   }
   
   .chat-message {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
+    width: 100%;
   }
   
   .message-content {
     max-width: 70%;
     padding: 10px;
     border-radius: 12px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .sent {
@@ -291,6 +335,7 @@
   .received .message-content {
     background-color: white;
     color: black;
+    margin-right: auto;
   }
   
   .message-header {
@@ -314,6 +359,8 @@
   .message-bubble {
     padding: 8px 12px;
     border-radius: 12px;
+    word-break: break-word;
+    max-width: 100%;
   }
   
   .message-time {
@@ -462,9 +509,10 @@
   }
   
   .chat-input-container {
-    position: relative;
-    padding: 8px;
+    position: sticky;
+    bottom: 0;
     background: white;
+    padding: 8px;
     border-top: 1px solid #e5e7eb;
     margin-top: auto;
   }
@@ -511,6 +559,26 @@
   
   .image-preview-container {
     display: none;
+  }
+  
+  .chat-header button {
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+  
+  .chat-header button:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+  }
+  
+  .sent .flex-row-reverse img {
+    margin-left: 8px;
+    margin-right: 0;
+  }
+  
+  .received img {
+    margin-right: 8px;
+    margin-left: 0;
   }
   </style>
   

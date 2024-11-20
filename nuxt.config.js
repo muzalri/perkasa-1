@@ -49,13 +49,8 @@ export default {
 
   // Axios configuration
   axios: {
-    baseURL: 'https://perkasa.miauwlan.com',
-    credentials: true,
-    headers: {
-      common: {
-        'Accept': 'application/json'
-      }
-    }
+     baseURL: 'https://perkasa.miauwlan.com/api',
+     credentials: true
   },
 
   // Auth configuration

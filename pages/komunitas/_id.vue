@@ -23,10 +23,18 @@
               <p class="text-sm text-gray-500">{{ formatDate(komunitas.created_at) }}</p>
               <p class="text-sm text-gray-500">{{ komunitas.category?.name }}</p>
             </div>
+            <div v-if="isAuthor" class="ml-auto flex gap-2">
+              <button
+                @click="destroyKomunitas"
+                class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200"
+              >
+                <i class="fas fa-trash mr-2"></i> Hapus
+              </button>
+            </div>
           </div>
 
           <!-- Konten artikel -->
-          <p class="text-gray-700 text-lg mb-4">{{ komunitas.body }}</p>
+          <p class="text-gray-700 text-lg mb-4 article-content">{{ komunitas.body }}</p>
 
           <!-- Gambar artikel -->
           <img
@@ -54,21 +62,7 @@
             </div>
           </div>
 
-          <!-- Tombol Like dan Comment -->
-          <!-- <div class="flex border-t border-b py-2 mb-6">
-            <button
-              @click="toggleLike"
-              class="flex-1 flex items-center justify-center py-2 hover:bg-gray-50"
-              :class="userLiked ? 'text-teal-600' : 'text-gray-600'"
-            >
-              <i class="fa fa-thumbs-up mr-2"></i> Suka
-            </button>
-            <button
-              class="flex-1 flex items-center justify-center py-2 hover:bg-gray-50 text-gray-600"
-            >
-              <i class="fa fa-comment mr-2"></i> Komentar
-            </button>
-          </div> -->
+
 
           <!-- Komentar -->
           <div class="space-y-4">
@@ -77,17 +71,21 @@
               <div
                 v-for="komentar in komunitas.komentars"
                 :key="komentar.id"
-                class="flex items-start space-x-3 mb-4"
+                class="flex items-start space-x-3 mb-4 bg-gray-50 p-4 rounded-lg"
               >
                 <img
-                  :src="getUserImage(komentar.user?.profile_photo)"
+                  :src="komentar.user?.profile_photo 
+                    ? `https://perkasa.miauwlan.com/imagedb/profile_photo/${komentar.user.profile_photo}`
+                    : require('~/assets/images/anwar.png')"
                   alt="Profile"
                   class="w-8 h-8 rounded-full"
                 />
-                <div class="flex-1">
-                  <p class="font-semibold">{{ komentar.user?.name }}</p>
-                  <p class="text-gray-600">{{ komentar.body }}</p>
-                  <p class="text-xs text-gray-400 mt-1">{{ formatDate(komentar.created_at) }}</p>
+                <div class="flex-1 overflow-hidden">
+                  <p class="font-semibold text-teal-800">{{ komentar.user?.name }}</p>
+                  <div class="comment-content bg-white p-3 rounded-lg mt-1 shadow-sm">
+                    <p class="text-gray-700 break-words">{{ komentar.body }}</p>
+                  </div>
+                  <p class="text-xs text-gray-400 mt-2">{{ formatDate(komentar.created_at) }}</p>
                 </div>
               </div>
             </div>
@@ -121,7 +119,7 @@ export default {
   },
   async asyncData({ params, $axios }) {
     try {
-      const { data } = await $axios.get(`http://localhost:8000/api/komunitas/${params.id}`);
+      const { data } = await $axios.get(`https://perkasa.miauwlan.com/api/komunitas/${params.id}`);
       return { 
         komunitas: data.data,
         totalLikes: data.data.likes ? data.data.likes.length : 0
@@ -138,7 +136,7 @@ export default {
     async toggleLike() {
     try {
       const response = await this.$axios.post(
-        `http://localhost:8000/api/komunitas/${this.komunitas.id}/like`,
+        `https://perkasa.miauwlan.com/api/komunitas/${this.komunitas.id}/like`,
         {},
         {
           headers: {
@@ -160,11 +158,11 @@ export default {
   },
     
     getImageUrl(imagePath) {
-      return imagePath ? `http://localhost:8000/storage/${imagePath}` : '';
+      return imagePath ? `https://perkasa.miauwlan.com/imagedb/komunitas/${imagePath}` : '';
     },
     getUserImage(profilePath) {
       return profilePath 
-        ? `http://localhost:8000/storage/${profilePath}` 
+        ? `https://perkasa.miauwlan.com/imagedb/profile_photo/${profilePath}` 
         : require('~/assets/images/anwar.png');  // Menggunakan require untuk gambar dari assets
     },
     formatDate(date) {
@@ -179,6 +177,25 @@ export default {
       
       // Tambahkan komentar baru ke array
       this.komunitas.komentars.push(newKomentar)
+    },
+    async destroyKomunitas() {
+      if (confirm('Apakah Anda yakin ingin menghapus postingan ini?')) {
+        try {
+          await this.$axios.delete(
+            `https://perkasa.miauwlan.com/api/komunitas/${this.komunitas.id}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${this.$auth.strategy.token.get()}`,
+                'Accept': 'application/json'
+              }
+            }
+          );
+          
+          this.$router.push('/komunitas');
+        } catch (error) {
+          console.error('Gagal menghapus postingan:', error);
+        }
+      }
     }
   },
   mounted() {
@@ -189,14 +206,58 @@ export default {
     );
   }
 },
+computed: {
+  isAuthor() {
+    return this.$auth.user && this.komunitas.user && this.$auth.user.id === this.komunitas.user.id;
+  }
+},
 };
 </script>
 
-<style>
+<style scoped>
+.text-gray-600 {
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.text-gray-700 {
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.bg-white {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
 .body {
-  background-image: url('~/assets/images/pattern.png'); /* Ganti dengan path pattern Anda */
-  background-size: 1000px 1000px; /* Mengatur ukuran pattern menjadi kecil */
-  background-repeat: repeat; /* Mengulang pattern */
-  background-position: center; /* Pusatkan pattern */
+  background-image: url('~/assets/images/pattern.png');
+  background-size: 1000px 1000px;
+  background-repeat: repeat;
+  background-position: center;
+  padding: 20px;
+}
+
+/* Container untuk konten artikel */
+.article-content {
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.comment-content {
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.text-gray-700 {
+  max-width: 600px;
 }
 </style>

@@ -115,7 +115,7 @@ export default {
   methods: {
     getUserImage(profilePath) {
       return profilePath
-        ? this.$axios.get(`/storage/${profilePath}`)
+        ? `https://perkasa.miauwlan.com/imagedb/profile_photo/${profilePath}`
         : require('~/assets/images/anwar.png')
     },
     async handlePhotoUpload(event) {

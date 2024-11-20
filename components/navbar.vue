@@ -45,7 +45,7 @@
             <div class="relative">
               <img 
                 v-if="$auth.user?.profile_photo"
-                :src="getUserImage($auth.user.profile_photo)"
+                :src="`https://perkasa.miauwlan.com/imagedb/profile_photo/${$auth.user.profile_photo}`"
                 class="h-8 w-8 rounded-full object-cover"
                 alt="Profile Photo"
               />
@@ -71,10 +71,24 @@
           </div>
         </NuxtLink>
 
-        <!-- Dark Mode Toggle -->
-        <button class="p-2 bg-white rounded-full hover:bg-black">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        <!-- Tombol Logout -->
+        <button 
+          @click="logout" 
+          class="p-2 bg-white rounded-full hover:bg-red-500 hover:text-white transition-colors duration-200"
+        >
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-6 w-6" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path 
+              stroke-linecap="round" 
+              stroke-linejoin="round" 
+              stroke-width="2" 
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" 
+            />
           </svg>
         </button>
 
@@ -95,11 +109,15 @@ export default {
     toggleNavbar() {
       this.isHidden = !this.isHidden;
     },
-    getUserImage(profilePath) {
-      return profilePath
-        ? `http://localhost:${this.imagePort}/storage/${profilePath}`
-        : require('~/assets/images/anwar.png')
+    async logout() {
+      try {
+        await this.$auth.logout()
+        localStorage.removeItem('token')
+        this.$router.push('/authentikasi/login')
+      } catch (error) {
+        console.error('Gagal logout:', error)
+      }
     }
-  }
+  },
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="body min-h-screen">
+  <div class="body">
     <div class="container mx-auto px-4 py-8 mt-16 w-8/12">
       <!-- Header Section -->
       <div class="flex flex-col md:flex-row items-center justify-between mb-6">
@@ -99,7 +99,7 @@
   data() {
     return {
       komunitas: [], // Data komunitas dari API
-
+ 
     };
   },
   async created() {
@@ -116,11 +116,11 @@
       }
     },
     getImageUrl(imagePath) {
-      return `${this.$axios.defaults.baseURL}/storage/${imagePath}`;
+      return `https://perkasa.miauwlan.com/imagedb/komunitas/${imagePath}`;
     },
     getUserImage(profilePath) {
       return profilePath
-        ? `${this.$axios.defaults.baseURL}/storage/${profilePath}`
+        ? `https://perkasa.miauwlan.com/imagedb/profile_photo/${profilePath}`
         : require('~/assets/images/anwar.png'); 
     },
     formatDate(date) {
@@ -180,20 +180,33 @@
   background-position: center;
   min-height: 100vh;
   width: 100%;
-  top: 0;
+  position: absolute;
+  top: 10%;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: -1;
+  overflow-y: auto;
 }
 
 .container {
   position: relative;
   z-index: 1;
+  margin-bottom: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
-.body:empty {
-  height: 100vh;
+.text-gray-700 {
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.bg-white {
+  max-width: 800px;
+  margin: 0 auto;
 }
 </style>
 

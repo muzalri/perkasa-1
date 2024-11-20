@@ -101,7 +101,6 @@
   
   <script>
   export default {
-    middleware: 'auth',
     data() {
       return {
         form: {
@@ -144,10 +143,10 @@
           this.form.content = guideBook.content
           
           if (guideBook.image_path) {
-            this.currentImage = `http://localhost:${this.imagePort}/storage/${guideBook.image_path}`
+            this.currentImage = `https://perkasa.miauwlan.com/imagedb/guide_book/images/${guideBook.image_path}`
           }
           if (guideBook.video_path) {
-            this.currentVideo = `http://localhost:${this.imagePort}/storage/${guideBook.video_path}`
+            this.currentVideo = `https://perkasa.miauwlan.com/imagedb/guide_book/videos/${guideBook.video_path}`
           }
         } catch (error) {
           console.error('Gagal mengambil data panduan:', error)

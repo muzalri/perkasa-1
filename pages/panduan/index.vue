@@ -47,7 +47,7 @@
             <!-- Gambar Panduan -->
             <img 
               v-if="guide.image_path" 
-              :src="getImageUrl(guide.image_path)"
+              :src="`https://perkasa.miauwlan.com/imagedb/guide_book/images/${guide.image_path}`"
               class="w-full h-48 object-cover"
               alt="Panduan Image"
             />
@@ -111,7 +111,7 @@ export default {
     },
     getUserImage(profilePath) {
       return profilePath
-        ? `${this.$axios.defaults.baseURL}/storage/${profilePath}`
+        ? `https://perkasa.miauwlan.com/imagedb/profile_photo/${profilePath}`
         : require('~/assets/images/anwar.png');
     },
     formatDate(date) {

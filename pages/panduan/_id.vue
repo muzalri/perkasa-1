@@ -32,7 +32,7 @@
         <!-- Gambar Panduan -->
         <img 
           v-if="guideBook.image_path" 
-          :src="`http://localhost:8000/storage/${guideBook.image_path}`"
+          :src="`https://perkasa.miauwlan.com/imagedb/guide_book/images/${guideBook.image_path}`"
           class="w-full h-64 object-cover"
           alt="Panduan Image"
         />
@@ -62,7 +62,7 @@
           <!-- Video jika ada -->
           <div v-if="guideBook.video_path" class="mt-6">
             <video 
-              :src="`http://localhost:8000/storage/${guideBook.video_path}`"
+              :src="`https://perkasa.miauwlan.com/imagedb/guide_book/videos/${guideBook.video_path}`"
               controls
               class="w-full rounded-lg"
             ></video>
@@ -99,7 +99,7 @@ export default {
   methods: {
     getUserImage(profilePath) {
       return profilePath
-        ? `http://localhost:${this.imagePort}/storage/${profilePath}`
+        ? `https://perkasa.miauwlan.com/imagedb/profile_photo/${profilePath}`
         : require('~/assets/images/anwar.png');
     },
     formatDate(date) {
