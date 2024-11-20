@@ -41,27 +41,33 @@
             :key="pesan.id"
             :class="[
               'chat-message',
-              pesan.user_id === $auth.user.id ? 'sent' : 'received'
+              Number(pesan.user_id) === Number($auth.user.id) ? 'sent' : 'received'
             ]"
           >
             <div class="message-content">
-              <div class="flex items-start">
+              <div class="flex items-start" :class="{ 'flex-row-reverse': Number(pesan.user_id) === Number($auth.user.id) }">
                 <img 
                   :src="getUserImage(pesan.user?.profile_photo)"
-                  class="w-8 h-8 rounded-full mr-2"
+                  class="w-8 h-8 rounded-full"
+                  :class="{ 'ml-2': Number(pesan.user_id) === Number($auth.user.id), 'mr-2': Number(pesan.user_id) !== Number($auth.user.id) }"
                   alt="User Avatar"
                 />
                 <div class="message-bubble">
                   <p v-if="pesan.isi">{{ pesan.isi }}</p>
                   <img
                     v-if="pesan.gambar"
-                    :src="`http://localhost:${imagePort}/imagedb/konsultasi/${pesan.gambar}`"
+                    :src="`https://perkasa.miauwlan.com/imagedb/konsultasi/${pesan.gambar}`"
                     alt="Gambar Pesan"
                     class="message-image"
                   />
                 </div>
               </div>
-              <span class="message-time text-xs text-gray-500 ml-10">{{ formatDate(pesan.created_at) }}</span>
+              <span 
+                class="message-time text-xs text-gray-500" 
+                :class="{ 'text-right mr-10': Number(pesan.user_id) === Number($auth.user.id), 'ml-10': Number(pesan.user_id) !== Number($auth.user.id) }"
+              >
+                {{ formatDate(pesan.created_at) }}
+              </span>
             </div>
           </div>
         </div>
@@ -121,6 +127,7 @@
           pesans: []
         },
         newMessage: '',
+
         selectedImage: null,
         imagePreview: null
       }
@@ -128,25 +135,18 @@
     async mounted() {
       await this.fetchKonsultasi()
       this.scrollToBottom()
+      console.log('Auth User ID:', this.$auth.user.id)
+      console.log('Auth User:', this.$auth.user)
     },
     methods: {
       async fetchKonsultasi() {
         try {
-          const { data } = await this.$axios.get(`/konsultasi/${this.$route.params.id}`, {
-            headers: {
-              'Authorization': `Bearer ${this.$auth.strategy.token.get()}`,
-              'Accept': 'application/json'
-            }
-          })
+          const { data } = await this.$axios.get(`/konsultasi/${this.$route.params.id}`)
           this.konsultasi = data.data
           await this.$nextTick()
           this.scrollToBottom()
         } catch (error) {
           console.error('Gagal mengambil data konsultasi:', error)
-          if (error.response?.status === 403) {
-            alert('Anda tidak memiliki akses ke konsultasi ini')
-            this.$router.push('/konsultasi')
-          }
         }
       },
       scrollToBottom() {
@@ -326,7 +326,6 @@
     background-color: #064e50;
     color: white;
     margin-left: auto;
-    max-width: 70%;
   }
   
   .received {
@@ -336,7 +335,7 @@
   .received .message-content {
     background-color: white;
     color: black;
-    max-width: 70%;
+    margin-right: auto;
   }
   
   .message-header {
@@ -570,6 +569,16 @@
   
   .chat-header button:hover {
     background-color: rgba(239, 68, 68, 0.1);
+  }
+  
+  .sent .flex-row-reverse img {
+    margin-left: 8px;
+    margin-right: 0;
+  }
+  
+  .received img {
+    margin-right: 8px;
+    margin-left: 0;
   }
   </style>
   
