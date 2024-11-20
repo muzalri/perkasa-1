@@ -121,7 +121,6 @@
           pesans: []
         },
         newMessage: '',
-        imagePort: 8000,
         selectedImage: null,
         imagePreview: null
       }
@@ -133,12 +132,21 @@
     methods: {
       async fetchKonsultasi() {
         try {
-          const { data } = await this.$axios.get(`/konsultasi/${this.$route.params.id}`)
+          const { data } = await this.$axios.get(`/konsultasi/${this.$route.params.id}`, {
+            headers: {
+              'Authorization': `Bearer ${this.$auth.strategy.token.get()}`,
+              'Accept': 'application/json'
+            }
+          })
           this.konsultasi = data.data
           await this.$nextTick()
           this.scrollToBottom()
         } catch (error) {
           console.error('Gagal mengambil data konsultasi:', error)
+          if (error.response?.status === 403) {
+            alert('Anda tidak memiliki akses ke konsultasi ini')
+            this.$router.push('/konsultasi')
+          }
         }
       },
       scrollToBottom() {
@@ -151,7 +159,7 @@
       },
       getUserImage(profilePath) {
         return profilePath
-          ? `http://localhost:${this.imagePort}/imagedb/profile_photo/${profilePath}`
+          ? `https://perkasa.miauwlan.com/imagedb/profile_photo/${profilePath}`
           : require('~/assets/images/anwar.png')
       },
       formatDate(date) {

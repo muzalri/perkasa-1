@@ -23,6 +23,14 @@
               <p class="text-sm text-gray-500">{{ formatDate(komunitas.created_at) }}</p>
               <p class="text-sm text-gray-500">{{ komunitas.category?.name }}</p>
             </div>
+            <div v-if="isAuthor" class="ml-auto flex gap-2">
+              <button
+                @click="destroyKomunitas"
+                class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200"
+              >
+                <i class="fas fa-trash mr-2"></i> Hapus
+              </button>
+            </div>
           </div>
 
           <!-- Konten artikel -->
@@ -54,21 +62,7 @@
             </div>
           </div>
 
-          <!-- Tombol Like dan Comment -->
-          <!-- <div class="flex border-t border-b py-2 mb-6">
-            <button
-              @click="toggleLike"
-              class="flex-1 flex items-center justify-center py-2 hover:bg-gray-50"
-              :class="userLiked ? 'text-teal-600' : 'text-gray-600'"
-            >
-              <i class="fa fa-thumbs-up mr-2"></i> Suka
-            </button>
-            <button
-              class="flex-1 flex items-center justify-center py-2 hover:bg-gray-50 text-gray-600"
-            >
-              <i class="fa fa-comment mr-2"></i> Komentar
-            </button>
-          </div> -->
+
 
           <!-- Komentar -->
           <div class="space-y-4">
@@ -81,7 +75,7 @@
               >
                 <img
                   :src="komentar.user?.profile_photo 
-                    ? `http://localhost:8000/imagedb/profile_photo/${komentar.user.profile_photo}`
+                    ? `https://perkasa.miauwlan.com/imagedb/profile_photo/${komentar.user.profile_photo}`
                     : require('~/assets/images/anwar.png')"
                   alt="Profile"
                   class="w-8 h-8 rounded-full"
@@ -125,7 +119,7 @@ export default {
   },
   async asyncData({ params, $axios }) {
     try {
-      const { data } = await $axios.get(`http://localhost:8000/api/komunitas/${params.id}`);
+      const { data } = await $axios.get(`https://perkasa.miauwlan.com/api/komunitas/${params.id}`);
       return { 
         komunitas: data.data,
         totalLikes: data.data.likes ? data.data.likes.length : 0
@@ -142,7 +136,7 @@ export default {
     async toggleLike() {
     try {
       const response = await this.$axios.post(
-        `http://localhost:8000/api/komunitas/${this.komunitas.id}/like`,
+        `https://perkasa.miauwlan.com/api/komunitas/${this.komunitas.id}/like`,
         {},
         {
           headers: {
@@ -164,11 +158,11 @@ export default {
   },
     
     getImageUrl(imagePath) {
-      return imagePath ? `http://localhost:8000/imagedb/komunitas/${imagePath}` : '';
+      return imagePath ? `https://perkasa.miauwlan.com/imagedb/komunitas/${imagePath}` : '';
     },
     getUserImage(profilePath) {
       return profilePath 
-        ? `http://localhost:8000/imagedb/profile_photo/${profilePath}` 
+        ? `https://perkasa.miauwlan.com/imagedb/profile_photo/${profilePath}` 
         : require('~/assets/images/anwar.png');  // Menggunakan require untuk gambar dari assets
     },
     formatDate(date) {
@@ -183,6 +177,25 @@ export default {
       
       // Tambahkan komentar baru ke array
       this.komunitas.komentars.push(newKomentar)
+    },
+    async destroyKomunitas() {
+      if (confirm('Apakah Anda yakin ingin menghapus postingan ini?')) {
+        try {
+          await this.$axios.delete(
+            `https://perkasa.miauwlan.com/api/komunitas/${this.komunitas.id}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${this.$auth.strategy.token.get()}`,
+                'Accept': 'application/json'
+              }
+            }
+          );
+          
+          this.$router.push('/komunitas');
+        } catch (error) {
+          console.error('Gagal menghapus postingan:', error);
+        }
+      }
     }
   },
   mounted() {
@@ -191,6 +204,11 @@ export default {
     this.userLiked = this.komunitas.likes.some(like => 
       like.user_id === userId && like.is_like === true
     );
+  }
+},
+computed: {
+  isAuthor() {
+    return this.$auth.user && this.komunitas.user && this.$auth.user.id === this.komunitas.user.id;
   }
 },
 };

@@ -99,7 +99,7 @@ export default {
   data() {
     return {
       komunitas: [], // Data komunitas dari API
-      imagePort: 8000,
+ 
     };
   },
   async created() {
@@ -116,11 +116,11 @@ export default {
       }
     },
     getImageUrl(imagePath) {
-      return `http://localhost:${this.imagePort}/imagedb/komunitas/${imagePath}`;
+      return `https://perkasa.miauwlan.com/imagedb/komunitas/${imagePath}`;
     },
     getUserImage(profilePath) {
       return profilePath
-        ? `http://localhost:8000/imagedb/profile_photo/${profilePath}`
+        ? `https://perkasa.miauwlan.com/imagedb/profile_photo/${profilePath}`
         : require('~/assets/images/anwar.png'); 
     },
     formatDate(date) {
