@@ -21,10 +21,19 @@
                 <i class="fas fa-camera"></i>
               </label>
             </div>
-            <div>
-              <h1 class="text-2xl font-bold text-teal-800">{{ user.name }}</h1>
-              <p class="text-gray-600">{{ user.email }}</p>
-              <p class="text-sm text-teal-600 capitalize">{{ user.role }}</p>
+            <div class="flex justify-between items-start w-full">
+              <div>
+                <h1 class="text-2xl font-bold text-teal-800">{{ user.name }}</h1>
+                <p class="text-gray-600">{{ user.email }}</p>
+                <p class="text-sm text-teal-600 capitalize">{{ user.role }}</p>
+              </div>
+              <button
+                v-if="user.role === 'user'"
+                @click="requestRoleChange"
+                class="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors duration-200"
+              >
+                <i class="fas fa-user-edit mr-2"></i> Ajukan sebagai Pakar
+              </button>
             </div>
           </div>
 
@@ -163,6 +172,17 @@ export default {
         this.$router.push('/authentikasi/login')
       } catch (error) {
         console.error('Gagal logout:', error)
+      }
+    },
+    async requestRoleChange() {
+      try {
+        const response = await this.$axios.post('/request-role-change')
+        if (response.data.success) {
+          alert('Permohonan perubahan role telah diajukan dan sedang ditinjau oleh admin.')
+        }
+      } catch (error) {
+        console.error('Gagal mengajukan permohonan:', error)
+        alert('Gagal mengajukan permohonan. Silakan coba lagi.')
       }
     }
   }
