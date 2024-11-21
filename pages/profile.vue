@@ -75,6 +75,24 @@
               />
             </div>
 
+            <div>
+              <label class="block text-sm font-medium text-gray-700">No. HP</label>
+              <input
+                type="text"
+                v-model="form.no_hp"
+                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-teal-500"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Alamat</label>
+              <textarea
+                v-model="form.alamat"
+                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-teal-500"
+                rows="3"
+              ></textarea>
+            </div>
+
             <div class="flex justify-between">
               <button
                 type="submit"
@@ -108,6 +126,8 @@ export default {
         email: '',
         password: '',
         password_confirmation: '',
+        no_hp: '',
+        alamat: ''
       },
       imagePort: 8000
     }
@@ -120,6 +140,8 @@ export default {
   created() {
     this.form.name = this.user.name
     this.form.email = this.user.email
+    this.form.no_hp = this.user.no_hp
+    this.form.alamat = this.user.alamat
   },
   methods: {
     getUserImage(profilePath) {
@@ -148,22 +170,53 @@ export default {
     },
     async updateProfile() {
       try {
-        const formData = {
-          name: this.form.name,
-          email: this.form.email
+        // Hanya kirim field yang diisi
+        const formData = {}
+        
+        if (this.form.name?.trim()) {
+          formData.name = this.form.name.trim()
+        }
+        
+        if (this.form.email?.trim()) {
+          formData.email = this.form.email.trim()
+        }
+
+        if (this.form.no_hp?.trim()) {
+          formData.no_hp = this.form.no_hp.trim()
+        }
+
+        if (this.form.alamat?.trim()) {
+          formData.alamat = this.form.alamat.trim()
         }
 
         if (this.form.password) {
+          if (this.form.password.length < 8) {
+            alert('Password minimal 8 karakter')
+            return
+          }
           formData.password = this.form.password
           formData.password_confirmation = this.form.password_confirmation
         }
 
-        await this.$axios.put('/profile', formData)
-        await this.$auth.fetchUser()
-        alert('Profil berhasil diperbarui')
+        const response = await this.$axios.put('/profile', formData)
+        
+        if (response.data.success) {
+          await this.$auth.fetchUser()
+          alert('Profil berhasil diperbarui')
+        }
+
       } catch (error) {
         console.error('Gagal memperbarui profil:', error)
-        alert('Gagal memperbarui profil')
+        
+        if (error.response?.data?.errors) {
+          // Tampilkan pesan error validasi dari backend
+          const errorMessages = Object.values(error.response.data.errors)
+            .flat()
+            .join('\n')
+          alert(errorMessages)
+        } else {
+          alert(error.response?.data?.message || 'Gagal memperbarui profil')
+        }
       }
     },
     async logout() {
