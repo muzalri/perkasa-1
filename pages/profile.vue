@@ -135,7 +135,7 @@ export default {
       formData.append('profile_photo', file)
 
       try {
-        await this.$axios.post('/api/profile/photo', formData, {
+        await this.$axios.post('/profile/photo', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
