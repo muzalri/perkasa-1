@@ -2,7 +2,7 @@
   <div>
   </div>
 </template>
-
+//p
 <script>
 export default {
   name: 'IndexPage',
