@@ -12,9 +12,6 @@
           <p class="text-gray-700 text-base sm:text-lg mb-6 px-4 md:px-0">
             Belajar beternak ikan secara mudah, efektif, dan aman. Diawasi pakar mulai dari sekarang
           </p>
-          <button class="mt-4 bg-teal-600 text-white px-6 sm:px-8 py-2 sm:py-3 rounded hover:bg-teal-700">
-            Harga
-          </button>
         </div> 
         <!-- Image -->
         <div class="md:w-1/2 md:mr-8 lg:mr-40">
