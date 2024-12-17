@@ -28,7 +28,7 @@
           :key="category.id"
           @click="selectedCategory = category.id"
           :class="[
-            'px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105 flex-shrink-0 flex items-center justify-center',
+            'px-3 py-2 rounded-full transition-all duration-300 transform hover:scale-105 flex-shrink-0 flex items-center justify-center',
             selectedCategory === category.id ? 'bg-teal-600 text-white h-10' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 h-10'
           ]"
         >
