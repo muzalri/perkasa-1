@@ -7,7 +7,7 @@
         <div class="text-center md:text-left md:w-1/2 mt-8 md:mt-0 md:ml-8 lg:ml-40">
           <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-teal-800 mb-4 leading-tight pt-8 sm:pt-10 md:pt-0">
             Belajar Berternak Ikan <br class="hidden sm:block" />
-            <span class="text-teal-600">Mulai dari Sekarang!</span>
+            <span class="text-teal-600">Mulai dari Sekarang!!</span>
           </h2>
           <p class="text-gray-700 text-base sm:text-lg mb-6 px-4 md:px-0">
             Belajar beternak ikan secara mudah, efektif, dan aman. Diawasi pakar mulai dari sekarang
