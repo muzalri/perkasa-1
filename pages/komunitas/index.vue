@@ -18,7 +18,7 @@
           @click="selectedCategory = null"
           :class="[
             'inline-block w-24 py-2 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center justify-center text-center leading-none',
-            !selectedCategory ? 'bg-teal-600 text-white h-10 text-center leading-none' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 h-10'
+            !selectedCategory ? 'bg-teal-600 text-white h-10 text-center leading-none' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 h-10 text-center leading-none'
           ]"
         >
           ALL
@@ -29,7 +29,7 @@
           @click="selectedCategory = category.id"
           :class="[
             'inline-block w-24 py-2 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center justify-center text-center leading-none',
-            selectedCategory === category.id ? 'bg-teal-600 text-white h-10 text-center leading-none' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 h-10'
+            selectedCategory === category.id ? 'bg-teal-600 text-white h-10 text-center leading-none' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 h-10 text-center leading-none'
           ]"
         >
           {{ category.name }}
