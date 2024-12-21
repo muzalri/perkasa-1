@@ -17,8 +17,8 @@
         <button 
           @click="selectedCategory = null"
           :class="[
-            'inline-block w-24 h-10 py-0 px-4 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center justify-center text-center',
-            !selectedCategory ? 'bg-teal-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            'inline-block w-24 py-2 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center justify-center text-center leading-none',
+            !selectedCategory ? 'bg-teal-600 text-white h-10' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 h-10'
           ]"
         >
           ALL
@@ -28,8 +28,8 @@
           :key="category.id"
           @click="selectedCategory = category.id"
           :class="[
-            'inline-block w-24 h-10 py-0 px-4 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center justify-center text-center',
-            selectedCategory === category.id ? 'bg-teal-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            'inline-block w-24 py-2 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center justify-center text-center leading-none',
+            selectedCategory === category.id ? 'bg-teal-600 text-white h-10' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 h-10'
           ]"
         >
           {{ category.name }}
